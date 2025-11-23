@@ -1,29 +1,6 @@
-import MapView, { LatLng, LongPressEvent, Marker }  from "react-native-maps"
-import React, { useState } from "react"
-import { StyleSheet } from "react-native"
+import React from "react"
+import { Redirect } from "expo-router"
 
-export default function MapScreen() {
-  const [userMarker, setUserMarker] = useState<LatLng | null>(null)
-
-  const addMarker = (e: LongPressEvent): void => {
-    const coordinates: LatLng = e.nativeEvent.coordinate
-    setUserMarker(coordinates)
-  }
-
-  return(
-    <MapView
-      style={styles.map}
-      onLongPress={addMarker}
-    >
-      {userMarker &&
-        <Marker coordinate={userMarker} />
-      }
-    </MapView>
-  )
+export default function TabsIndex() {
+  return <Redirect href="/map" />
 }
-
-const styles = StyleSheet.create({
-  map: {
-    flex: 1,
-  },
-})

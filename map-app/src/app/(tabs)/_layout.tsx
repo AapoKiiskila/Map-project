@@ -8,6 +8,13 @@ export default function Layout() {
       <Tabs.Screen 
         name="index"
         options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen 
+        name="map"
+        options={{
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Ionicons
               name="map-outline"
