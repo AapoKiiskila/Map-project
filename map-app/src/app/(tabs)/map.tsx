@@ -1,6 +1,6 @@
+import { Alert, StyleSheet } from "react-native"
 import MapView, { LatLng, LongPressEvent, Marker }  from "react-native-maps"
 import React, { useState } from "react"
-import { StyleSheet } from "react-native"
 import { useRouter } from "expo-router"
 
 export default function MapScreen() {
@@ -11,7 +11,29 @@ export default function MapScreen() {
     const coordinates: LatLng = e.nativeEvent.coordinate
     setUserMarker(coordinates)
 
-    router.push("/map/create-post")
+    Alert.alert("Continue?", "Would you like to continue creating a new post using the location of this marker?", [
+      {
+        text: "Cancel",
+        onPress: () => setUserMarker(null),
+        style: "cancel"
+      },
+      {
+        text: "Yes",
+        onPress: () => continueProcess(coordinates)
+      }
+    ])
+  }
+
+  const continueProcess = (coordinates: LatLng): void => {
+    router.push({
+      pathname: "/map/create-post",
+      params: {
+        latitude: coordinates.latitude,
+        longitude: coordinates.longitude
+      }
+    })
+    
+    setUserMarker(null)
   }
 
   return(
