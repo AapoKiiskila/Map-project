@@ -1,5 +1,5 @@
-import { Alert, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import MapView, { LatLng, LongPressEvent, Marker }  from "react-native-maps"
+import { Modal, Pressable, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native"
 import React, { useState } from "react"
 import { useRouter } from "expo-router"
 
@@ -54,20 +54,22 @@ export default function MapScreen() {
         transparent={true}
         visible={modalVisible}
       >
-        <View style={styles.modalBackground}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.title}>Continue?</Text>
-            <Text style={styles.message}>Would you like to continue creating a new post using the location of this marker?</Text>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.cancelButton} onPress={pressedCancel}>
-                <Text style={styles.buttonText}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.confirmButton} onPress={continueProcess}>
-                <Text style={styles.buttonText}>Yes</Text>
-              </TouchableOpacity>
+        <Pressable style={styles.modalBackground} onPress={pressedCancel}>
+          <TouchableWithoutFeedback>
+            <View style={styles.modalContainer}>
+              <Text style={styles.title}>Continue?</Text>
+              <Text style={styles.message}>Would you like to continue creating a new post using the location of this marker?</Text>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity style={styles.cancelButton} onPress={pressedCancel}>
+                  <Text style={styles.buttonText}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.confirmButton} onPress={continueProcess}>
+                  <Text style={styles.buttonText}>Yes</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        </View>
+          </TouchableWithoutFeedback>
+        </Pressable>
       </Modal>
     </>
   )
