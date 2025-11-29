@@ -40,13 +40,8 @@ export default function MapScreen() {
 
   return(
     <>
-      <MapView
-        style={styles.map}
-        onLongPress={addMarker}
-      >
-        {userMarker &&
-          <Marker coordinate={userMarker} />
-        }
+      <MapView style={styles.map} onLongPress={addMarker}>
+        {userMarker && <Marker coordinate={userMarker} />}
       </MapView>
 
       <Modal
