@@ -12,7 +12,7 @@ type Props = {
 export function TextInputInfoText({ error, errorMessage, style, textLimit, word}: Props) {
   return(
     <View style={[styles.container, style]}>
-      {error ? <Text style={styles.leftText}>{errorMessage}</Text> : <Text></Text>}
+      {error ? <Text style={styles.leftText}>{errorMessage}</Text> : <Text style={styles.leftText}></Text>}
       <Text style={styles.rightText}>{word.length} / {textLimit}</Text>
     </View>
   )
