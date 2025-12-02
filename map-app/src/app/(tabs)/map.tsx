@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    fontWeight: "bold",
+    fontWeight: 500,
     fontSize: 20,
   },
   message: {
@@ -103,20 +103,20 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     backgroundColor: "rgba(255, 0, 0, 1)",
-    borderRadius: 8,
+    borderRadius: 4,
     height: 40,
     width: "30%",
     justifyContent: "center",
     alignItems: "center"
   },
   buttonText: {
-    fontWeight: "bold",
+    fontWeight: 500,
     fontSize: 16,
     color: "rgba(255, 255, 255, 1)"
   },
   confirmButton: {
     backgroundColor: "rgba(54, 190, 0, 1)",
-    borderRadius: 8,
+    borderRadius: 4,
     height: 40,
     width: "30%",
     justifyContent: "center",

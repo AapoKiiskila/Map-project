@@ -20,8 +20,8 @@ export function CustomTextInput({ error, label, leftIcon, maxLength, multiline, 
   const [focused, setFocused] = useState<boolean>(false)
 
   return(
-    <View style={styles.mainContainer}>
-      {label && <Text style={[ styles.labelText, error && {color: "rgb(186, 26, 26)"} ]}>{label}</Text>}
+    <View>
+      {label && <Text style={[styles.labelText, error && styles.errorText]}>{label}</Text>}
       <View style={styles.container}>
         {focused && <View style={styles.containerFocused}></View>}
         {error && <View style={styles.error}></View>}
@@ -55,13 +55,13 @@ export function CustomTextInput({ error, label, leftIcon, maxLength, multiline, 
 }
 
 const styles = StyleSheet.create({
-  mainContainer: {
-    width: "100%",
-  },
   labelText: {
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: 500,
     marginBottom: 4,
+  },
+  errorText: {
+    color: "rgb(186, 26, 26)",
   },
   container: {
     flexDirection: "row",
