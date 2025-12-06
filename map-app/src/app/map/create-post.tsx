@@ -12,6 +12,7 @@ export default function CreatePostScreen() {
   const [description, setDescription] = useState<string>("")
   const [descriptionError, setDescriptionError] = useState<boolean>(false)
   const [type, setType] = useState<string>("")
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false)
   const insets: EdgeInsets = useSafeAreaInsets()
   
   const checkTitle = (): void => {
@@ -58,6 +59,10 @@ export default function CreatePostScreen() {
     }
 
     Keyboard.dismiss()
+  }
+
+  const submit = (): void => {
+    setIsSubmitted(true)
   }
   
   return(
@@ -132,7 +137,11 @@ export default function CreatePostScreen() {
         </View>
       </View>
       <View style={[styles.lowerContent, {paddingBottom: insets.bottom}]}>
-
+        <CustomButton 
+          disabled={!title || !description || titleError || descriptionError || !type || isSubmitted}
+          label="Submit"
+          onPress={submit}
+        />
       </View>
     </Pressable>
   )
