@@ -4,6 +4,7 @@ from decimal import Decimal
 class PostCreate(BaseModel):
   title: str
   description: str
+  type: str
   latitude: Decimal
   longitude: Decimal
-  user_id: int
+  id: int

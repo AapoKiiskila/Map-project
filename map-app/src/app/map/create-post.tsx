@@ -1,9 +1,15 @@
+import { ErrorResponse } from "../../types/ErrorResponse"
 import { CustomButton } from "../../components/CustomButton"
 import { CustomTextInput } from "../../components/CustomTextInput"
+import { CreatePostPayload } from "../../types/CreatePostPayload"
 import { Keyboard, Pressable, StyleSheet, View } from "react-native"
+import { LoadingModal } from "../../components/LoadingModal"
 import React, { useState } from "react"
 import { SegmentedButtons } from "react-native-paper"
+import { SuccessResponse } from "../../types/SuccessResponse"
 import { TextInputInfoText } from "../../components/TextInputInfoText"
+import { useLocalSearchParams } from "expo-router"
+import { useRouter } from "expo-router"
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context"
 
 export default function CreatePostScreen() {
@@ -13,7 +19,14 @@ export default function CreatePostScreen() {
   const [descriptionError, setDescriptionError] = useState<boolean>(false)
   const [type, setType] = useState<string>("")
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [alertMessage, setAlertMessage] = useState<string>("")
+  const [errorMessage, setErrorMessage] = useState<string>("")
   const insets: EdgeInsets = useSafeAreaInsets()
+  const router = useRouter()
+  const {latitude, longitude} = useLocalSearchParams<{latitude: string, longitude: string}>()
+  const lat = Number(latitude)
+  const lon = Number(longitude)
   
   const checkTitle = (): void => {
     if (!title || title.trim() === "") {
@@ -61,8 +74,39 @@ export default function CreatePostScreen() {
     Keyboard.dismiss()
   }
 
-  const submit = (): void => {
+  const submit = async (): Promise<void> => {
     setIsSubmitted(true)
+    setIsLoading(true)
+
+    const payload: CreatePostPayload = {
+      title: title,
+      description: description,
+      type: type,
+      latitude: lat,
+      longitude: lon,
+      id: 1,  // Hardcoded for testing purposes
+    }
+
+    try {
+      const response: Response = await fetch("", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(payload)
+      })
+
+      if (response.ok) {
+        const data: SuccessResponse = await response.json()
+        setIsLoading(false)
+        setAlertMessage(data.message)
+      } else {
+        const errorData: ErrorResponse = await response.json()
+        setIsLoading(false)
+        setErrorMessage(errorData.detail)
+      }
+    } catch (error) {
+      setIsLoading(false)
+      setErrorMessage("Something went wrong. Please try again later.")
+    }
   }
   
   return(
@@ -138,11 +182,19 @@ export default function CreatePostScreen() {
       </View>
       <View style={[styles.lowerContent, {paddingBottom: insets.bottom}]}>
         <CustomButton 
-          disabled={!title || !description || titleError || descriptionError || !type || isSubmitted}
+          disabled={!title || !description || titleError || descriptionError || !type}
           label="Submit"
           onPress={submit}
         />
       </View>
+
+      <LoadingModal
+        alertMessage={alertMessage} 
+        errorMessage={errorMessage} 
+        isLoading={isLoading} 
+        isVisible={isSubmitted} 
+        onPress={() => router.back()}
+      />
     </Pressable>
   )
 }
