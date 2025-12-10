@@ -40,7 +40,9 @@ export default function Layout() {
       <Tabs.Screen 
         name="settings"
         options={{
-          headerShown: false,
+          headerShown: true,
+          headerShadowVisible: false,
+          title: "Settings",
           tabBarIcon: ({ color, size }) => (
             <Ionicons
               name="settings-outline"
