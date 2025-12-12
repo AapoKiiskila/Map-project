@@ -203,7 +203,8 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    backgroundColor: "rgba(255, 255, 255, 1)",
   },
   upperContent: {
     width: "95%",

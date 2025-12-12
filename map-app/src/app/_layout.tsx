@@ -9,7 +9,8 @@ export default function RootLayout() {
         <Stack.Protected guard={true}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }}/>
           <Stack.Screen name="map/create-post" options={{ headerShown: true, title: "Create post", headerBackTitle: "Cancel" }}/>
-          <Stack.Screen name="settings/personal-information/index" options={{ headerShown: true, title: "Personal information", headerBackTitle: "Back" , headerShadowVisible: false}}/>
+          <Stack.Screen name="settings/personal-information/index" options={{ headerShown: true, title: "Personal information", headerBackTitle: "Back" , headerShadowVisible: false }}/>
+          <Stack.Screen name="settings/personal-information/change-username" options={{ headerShown: true, title: "Change username", headerBackTitle: "Cancel" , headerShadowVisible: false }}/>
         </Stack.Protected>
         <Stack.Protected guard={false}>
           <Stack.Screen name="(auth)" options={{ headerShown: false }}/>

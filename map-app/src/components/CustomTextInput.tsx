@@ -98,5 +98,6 @@ const styles = StyleSheet.create({
     height: 40,
     fontSize: 16,
     padding: 10,
+    textAlignVertical: "top",
   },
 })
