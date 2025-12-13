@@ -3,8 +3,13 @@ from app.models import Post, User
 from app.schemas import post_schema
 from sqlalchemy.orm import Session
 
+def get_all_posts(db: Session):
+  posts = db.query(Post).all()
+  
+  return posts
+
 def create_post(new_post: post_schema.PostCreate, db: Session):
-  user = db.query(User).filter(User.id == new_post.id).first()
+  user = db.query(User).filter(User.id == new_post.user_id).first()
 
   if not user:
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
@@ -27,7 +32,7 @@ def create_post(new_post: post_schema.PostCreate, db: Session):
     type=new_post.type,
     latitude=new_post.latitude,
     longitude=new_post.longitude,
-    user_id=new_post.id
+    user_id=new_post.user_id
   )
 
   db.add(db_post)

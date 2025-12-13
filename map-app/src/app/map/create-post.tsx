@@ -84,7 +84,7 @@ export default function CreatePostScreen() {
       type: type,
       latitude: lat,
       longitude: lon,
-      id: 1,  // Hardcoded for testing purposes
+      user_id: 1,  // Hardcoded for testing purposes
     }
 
     try {

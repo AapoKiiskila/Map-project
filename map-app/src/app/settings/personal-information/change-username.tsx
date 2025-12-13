@@ -37,7 +37,7 @@ export default function ChangeUsernameScreen() {
   }, [])
 
   const checkNewUsername = (): void => {
-    if (!newUsername || newUsername.trim() === "" || newUsername.length < 2) {
+    if (!newUsername || newUsername.trim() === "" || newUsername.length <= 2) {
       setNewUsernameError(true)
     } else {
       setNewUsernameError(false)
@@ -45,7 +45,7 @@ export default function ChangeUsernameScreen() {
   }
 
   const changeNewUsername = (text: string): void => {
-    if (!text || text.trim() === "" || newUsername.length < 2) {
+    if (!text || text.trim() === "" || text.length <= 2) {
       setNewUsernameError(true)
     } else {
       setNewUsernameError(false)

@@ -1,14 +1,58 @@
+import { LoadingModal } from "../../components/LoadingModal"
 import MapView, { LatLng, LongPressEvent, Marker }  from "react-native-maps"
 import { Modal, Pressable, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native"
-import React, { useState } from "react"
+import { PostMarker } from "../../types/PostMarker"
+import React, { useCallback, useState } from "react"
+import { useFocusEffect } from '@react-navigation/native'
 import { useRouter } from "expo-router"
 
 export default function MapScreen() {
   const [userMarker, setUserMarker] = useState<LatLng | null>(null)
+  const [markers, setMarkers] = useState<PostMarker[] | null>(null)
+  const [limitError, setLimitError] = useState<boolean>(false)
+  const [fetchError, setFetchError] = useState<boolean>(false)
+  const [showFetchError, setShowFetchError] = useState<boolean>(false)
   const [modalVisible, setModalVisible] = useState<boolean>(false)
   const router = useRouter()
 
+  useFocusEffect(
+    useCallback(() => {
+      fetchPosts()
+    }, [])
+  )
+
+  const fetchPosts = async (): Promise<void> => {
+    try {
+      const response: Response = await fetch("", {
+        method: "GET",
+        headers: {"Content-Type": "application/json"},
+      })
+    
+      if (response.ok) {
+        const data: PostMarker[] = await response.json()
+        setMarkers(data)
+      } else {
+        setFetchError(true)
+      }
+    } catch (error) {
+      setFetchError(true)
+    }
+  }
+
   const addMarker = (e: LongPressEvent): void => {
+    if (fetchError) {
+      setShowFetchError(true)
+      return
+    }
+
+    const userPosts: PostMarker[] = markers?.filter((marker) => marker.user_id === 1) ?? [] // Id hardcoded for testing purposes
+    const userPostCount: number = userPosts.length
+
+    if (3 <= userPostCount) {
+      setLimitError(true)
+      return
+    }
+
     const coordinates: LatLng = e.nativeEvent.coordinate
     setUserMarker(coordinates)
     setModalVisible(true)
@@ -42,7 +86,32 @@ export default function MapScreen() {
     <>
       <MapView style={styles.map} onLongPress={addMarker}>
         {userMarker && <Marker coordinate={userMarker} />}
+        {markers && markers.map(marker => (
+          <Marker
+            key={marker.id}
+            coordinate={{latitude: Number(marker.latitude), longitude: Number(marker.longitude)}}
+            pinColor={
+              marker.user_id === 1 ? "rgba(255, 0, 0, 1)"
+              : marker.type === "Animal" ? "rgba(255, 196, 0, 1)"
+              : "rgba(0, 60, 255, 1)"
+            }
+          />
+        ))}
       </MapView>
+
+      <LoadingModal 
+        errorMessage={"You have already created the maximum amount of posts."} 
+        isLoading={false} 
+        isVisible={limitError}
+        onPress={() => {setLimitError(false)}}
+      />
+
+      <LoadingModal 
+        errorMessage={"Something went wrong. Please try again later."} 
+        isLoading={false} 
+        isVisible={showFetchError}
+        onPress={() => {setShowFetchError(false)}}
+      />
 
       <Modal
         animationType="fade"
