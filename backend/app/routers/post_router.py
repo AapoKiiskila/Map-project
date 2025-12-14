@@ -6,9 +6,13 @@ from sqlalchemy.orm import Session
 
 router = APIRouter()
 
-@router.get("/posts", response_model=list[post_schema.PostFetchResponse] ,status_code=status.HTTP_200_OK)
+@router.get("/posts", response_model=list[post_schema.PostFetchResponse], status_code=status.HTTP_200_OK)
 def fetch(db: Session = Depends(get_db)):
   return post_crud.get_all_posts(db)
+
+@router.get("/posts/{post_id}", response_model=post_schema.PostDataResponse, status_code=status.HTTP_200_OK)
+def fetch(post_id: int, db: Session = Depends(get_db)):
+  return post_crud.get_one_post(post_id, db)
 
 @router.post("/posts/create-post", status_code=status.HTTP_201_CREATED)
 def create(new_post: post_schema.PostCreate, db: Session = Depends(get_db)):

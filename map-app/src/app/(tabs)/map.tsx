@@ -3,7 +3,7 @@ import MapView, { LatLng, LongPressEvent, Marker }  from "react-native-maps"
 import { Modal, Pressable, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native"
 import { PostMarker } from "../../types/PostMarker"
 import React, { useCallback, useState } from "react"
-import { useFocusEffect } from '@react-navigation/native'
+import { useFocusEffect } from "@react-navigation/native"
 import { useRouter } from "expo-router"
 
 export default function MapScreen() {
@@ -82,6 +82,13 @@ export default function MapScreen() {
     setModalVisible(false)
   }
 
+  const navigateToPost = (id: number): void => {
+    router.push({
+      pathname: "/map/[id]",
+      params: {id: id}
+    })
+  }
+
   return(
     <>
       <MapView style={styles.map} onLongPress={addMarker}>
@@ -90,6 +97,7 @@ export default function MapScreen() {
           <Marker
             key={marker.id}
             coordinate={{latitude: Number(marker.latitude), longitude: Number(marker.longitude)}}
+            onPress={() => navigateToPost(marker.id)}
             pinColor={
               marker.user_id === 1 ? "rgba(255, 0, 0, 1)"
               : marker.type === "Animal" ? "rgba(255, 196, 0, 1)"

@@ -8,6 +8,10 @@ class PostFetchResponse(BaseModel):
   latitude: Decimal
   longitude: Decimal
 
+class PostDataResponse(BaseModel):
+  title: str
+  description: str
+
 class PostCreate(BaseModel):
   title: str
   description: str

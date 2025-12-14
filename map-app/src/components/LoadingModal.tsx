@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   buttonPressed: {
-    opacity: 0.2,
+    opacity: 0.8,
   },
   buttonText: {
     color: "rgba(255, 255, 255, 1)",

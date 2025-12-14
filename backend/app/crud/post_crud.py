@@ -8,6 +8,14 @@ def get_all_posts(db: Session):
   
   return posts
 
+def get_one_post(post_id: int, db: Session):
+  post = db.query(Post).filter(Post.id == post_id).first()
+
+  if not post:
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Could not find this post")
+  
+  return post
+
 def create_post(new_post: post_schema.PostCreate, db: Session):
   user = db.query(User).filter(User.id == new_post.user_id).first()
 
