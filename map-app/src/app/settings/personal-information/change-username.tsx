@@ -63,7 +63,7 @@ export default function ChangeUsernameScreen() {
     }
     
     try {
-      const response: Response = await fetch("", {
+      const response: Response = await fetch("http://192.168.1.102:8000/users/1/update-username", { // Hardcoded for testing purposes
         method: "PUT",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(payload)

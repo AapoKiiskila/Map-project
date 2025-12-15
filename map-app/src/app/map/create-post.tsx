@@ -15,8 +15,8 @@ import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context"
 export default function CreatePostScreen() {
   const [title, setTitle] = useState<string>("")
   const [titleError, setTitleError] = useState<boolean>(false)
-  const [description, setDescription] = useState<string>("")
-  const [descriptionError, setDescriptionError] = useState<boolean>(false)
+  const [details, setDetails] = useState<string>("")
+  const [detailsError, setDetailsError] = useState<boolean>(false)
   const [type, setType] = useState<string>("")
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -46,22 +46,22 @@ export default function CreatePostScreen() {
     setTitle(text)
   }
 
-  const checkDescription = (): void => {
-    if (!description || description.trim() === "") {
-      setDescriptionError(true)
+  const checkDetails = (): void => {
+    if (!details || details.trim() === "") {
+      setDetailsError(true)
     } else {
-      setDescriptionError(false)
+      setDetailsError(false)
     }
   }
 
-  const changeDescription = (text: string): void => {
+  const changeDetails = (text: string): void => {
     if (!text || text.trim() === "") {
-      setDescriptionError(true)
+      setDetailsError(true)
     } else {
-      setDescriptionError(false)
+      setDetailsError(false)
     }
 
-    setDescription(text)
+    setDetails(text)
   }
 
   const changeType = (value: string): void => {
@@ -80,7 +80,7 @@ export default function CreatePostScreen() {
 
     const payload: CreatePostPayload = {
       title: title,
-      description: description,
+      details: details,
       type: type,
       latitude: lat,
       longitude: lon,
@@ -88,7 +88,7 @@ export default function CreatePostScreen() {
     }
 
     try {
-      const response: Response = await fetch("", {
+      const response: Response = await fetch("http://192.168.1.102:8000/posts/create-post", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(payload)
@@ -130,24 +130,24 @@ export default function CreatePostScreen() {
             word={title}
           />
         </View>
-        <View style={styles.descriptionContainer}>
+        <View style={styles.detailsContainer}>
           <CustomTextInput 
-            error={descriptionError}
-            label="Description"
+            error={detailsError}
+            label="Details"
             maxLength={500}
             multiline={true}
-            onBlur={checkDescription}
-            onChangeText={changeDescription}
-            placeholder="Enter a description"
+            onBlur={checkDetails}
+            onChangeText={changeDetails}
+            placeholder="Enter details"
             style={{height: 250}}
-            value={description}
+            value={details}
           />
           <TextInputInfoText
-            error={descriptionError}
-            errorMessage={"Description is required"}
+            error={detailsError}
+            errorMessage={"Details are required"}
             style={{marginTop: 4}}
             textLimit={500}
-            word={description}
+            word={details}
           />
         </View>
         <View style={styles.segmentedButtonsContainer}>
@@ -182,7 +182,7 @@ export default function CreatePostScreen() {
       </View>
       <View style={[styles.lowerContent, {paddingBottom: insets.bottom}]}>
         <CustomButton 
-          disabled={!title || !description || titleError || descriptionError || !type}
+          disabled={!title || !details || titleError || detailsError || !type}
           label="Submit"
           onPress={submit}
         />
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     marginTop: 10,
   },
-  descriptionContainer: {
+  detailsContainer: {
     marginTop: 10,
   },
   segmentedButtonsContainer: {
@@ -220,5 +220,5 @@ const styles = StyleSheet.create({
   },
   lowerContent: {
     width: "95%",
-  }
+  },
 })

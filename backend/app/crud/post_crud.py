@@ -25,8 +25,8 @@ def create_post(new_post: post_schema.PostCreate, db: Session):
   if not new_post.title or not new_post.title.strip():
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Title cannot be empty")
   
-  if not new_post.description or not new_post.description.strip():
-    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Description cannot be empty")
+  if not new_post.details or not new_post.details.strip():
+    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Details cannot be empty")
   
   if not new_post.type or not new_post.type.strip():
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Type is required")
@@ -36,7 +36,7 @@ def create_post(new_post: post_schema.PostCreate, db: Session):
   
   db_post = Post(
     title=new_post.title,
-    description=new_post.description,
+    details=new_post.details,
     type=new_post.type,
     latitude=new_post.latitude,
     longitude=new_post.longitude,

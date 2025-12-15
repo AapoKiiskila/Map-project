@@ -17,7 +17,7 @@ class Post(Base):
 
   id = Column(Integer, primary_key=True)
   title = Column(String(50), nullable=False)
-  description = Column(String(500), nullable=False)
+  details = Column(String(500), nullable=False)
   type = Column(String(6), nullable=False)
   latitude = Column(DECIMAL(18, 15), nullable=False)
   longitude = Column(DECIMAL(18, 15), nullable=False)

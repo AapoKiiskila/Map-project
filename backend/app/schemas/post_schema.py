@@ -10,11 +10,11 @@ class PostFetchResponse(BaseModel):
 
 class PostDataResponse(BaseModel):
   title: str
-  description: str
+  details: str
 
 class PostCreate(BaseModel):
   title: str
-  description: str
+  details: str
   type: str
   latitude: Decimal
   longitude: Decimal

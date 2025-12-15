@@ -1,6 +1,6 @@
 export type CreatePostPayload = {
   title: string
-  description: string
+  details: string
   type: string
   latitude: number
   longitude: number

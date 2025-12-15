@@ -1,4 +1,4 @@
 export type PostScreenData = {
   title: string
-  description: string
+  details: string
 }

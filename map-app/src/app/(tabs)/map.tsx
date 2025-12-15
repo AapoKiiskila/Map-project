@@ -23,7 +23,7 @@ export default function MapScreen() {
 
   const fetchPosts = async (): Promise<void> => {
     try {
-      const response: Response = await fetch("", {
+      const response: Response = await fetch("http://192.168.1.102:8000/posts", {
         method: "GET",
         headers: {"Content-Type": "application/json"},
       })

@@ -51,7 +51,7 @@ export default function PostScreen() {
 
   const navigateToReplyScreen = (): void =>{
     router.push({
-      pathname: "/map/[id]/reply",
+      pathname: "/map/[id]/new-sighting",
       params: {id: postId}
     })
   }
@@ -63,7 +63,7 @@ export default function PostScreen() {
           <View style={styles.scrollViewContainer}>
             <ScrollView>
               <Text style={styles.titleText}>{postDetails.title}</Text>
-              <Text style={styles.descriptionText}>{postDetails.description}</Text>
+              <Text style={styles.detailsText}>{postDetails.details}</Text>
             </ScrollView>
           </View>
           <View style={[styles.buttonContainer, {paddingBottom: insets.bottom}]}>
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     fontWeight: 500,
     alignSelf: "center",
   },
-  descriptionText: {
+  detailsText: {
     fontSize: 16,
     marginTop: 10,
     lineHeight: 24
