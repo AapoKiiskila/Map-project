@@ -11,7 +11,7 @@ import { useRouter } from "expo-router"
 
 export default function PostScreen() {
   const [postDetails, setPostDetails] = useState<PostScreenData | null>(null)
-  const [showFetchError, setShowFetchError] = useState<boolean>(false)
+  const [showError, setShowError] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>("")
   const {id} = useLocalSearchParams<{id: string}>()
   const postId = Number(id)
@@ -39,13 +39,13 @@ export default function PostScreen() {
         setErrorMessage(errorData.detail)
       }
     } catch (error) {
-      setShowFetchError(true)
+      setShowError(true)
     }
   }
 
   const showErrorAndGoBack = (): void => {
     setErrorMessage("")
-    setShowFetchError(false)
+    setShowError(false)
     router.back()
   }
 
@@ -60,25 +60,18 @@ export default function PostScreen() {
     <View style={styles.mainContainer}>
       {postDetails &&
         <>
-          <View style={styles.container}>
-            <View style={styles.titleContainer}>
+          <View style={styles.scrollViewContainer}>
+            <ScrollView>
               <Text style={styles.titleText}>{postDetails.title}</Text>
-            </View>
-            <View style={styles.scrollViewContainer}>
-              <ScrollView style={styles.scrollView}>
-                <Text style={styles.descriptionText}>{postDetails.description}</Text>
-              </ScrollView>
-            </View>
+              <Text style={styles.descriptionText}>{postDetails.description}</Text>
+            </ScrollView>
           </View>
-          <View style={styles.container}>
-            <View style={[styles.buttonContainer, {paddingBottom: insets.bottom}]}>
-              <CustomButton onPress={navigateToReplyScreen} label="Reply" />
-            </View>
+          <View style={[styles.buttonContainer, {paddingBottom: insets.bottom}]}>
+            <CustomButton onPress={navigateToReplyScreen} label="Reply" />
           </View>
         </>
       }
     
-
       {errorMessage &&
         <LoadingModal 
           errorMessage={errorMessage} 
@@ -88,9 +81,9 @@ export default function PostScreen() {
         />
       }
 
-      {showFetchError &&
+      {showError &&
         <LoadingModal 
-          errorMessage={errorMessage} 
+          errorMessage={"Something went wrong. Please try again later."} 
           isLoading={false} 
           isVisible={true}
           onPress={showErrorAndGoBack}
@@ -105,37 +98,32 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "rgba(255, 255, 255, 1)",
     justifyContent: "space-between",
-  },
-  container: {
-    alignItems: "center"
-  },
-  titleContainer: {
     alignItems: "center",
-    borderRadius: 4,
-    backgroundColor: "rgba(199, 199, 205, 0.3)",
-    height: 40,
-    justifyContent: "center",
-    marginTop: 10,
+  },
+  scrollViewContainer: {
+    backgroundColor: "rgba(255, 255, 255, 1)",
     width: "95%",
+    maxHeight: 600,
+    marginTop: 20,
+    padding: 10,
+    borderRadius: 4,
+    elevation: 3,
+    shadowColor: "rgba(0, 0, 0, 1)(255, 255, 255, 1)",
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    shadowOffset: { width: 0, height: 1 },
   },
   titleText: {
     fontSize: 20,
     fontWeight: 500,
-  },
-  scrollViewContainer: {
-    marginTop: 10,
-    maxHeight: 500,
-    width: "95%",
-  },
-  scrollView: {
-    backgroundColor: "rgba(199, 199, 205, 0.3)",
-    borderRadius: 4,
+    alignSelf: "center",
   },
   descriptionText: {
     fontSize: 16,
-    padding: 10,
+    marginTop: 10,
+    lineHeight: 24
   },
   buttonContainer: {
-    width: "95%",
+    width: "95%",  
   },
 })
