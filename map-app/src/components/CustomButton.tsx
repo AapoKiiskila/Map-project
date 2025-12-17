@@ -1,5 +1,5 @@
 import React from "react"
-import { Pressable, StyleSheet, Text, View } from "react-native"
+import { Pressable, StyleSheet, Text, } from "react-native"
 
 type Props = {
   disabled?: boolean
@@ -9,37 +9,34 @@ type Props = {
 
 export function CustomButton({ disabled, label, onPress }: Props) {
   return(
-    <View style={styles.container}>
-      <Pressable
-        disabled={disabled}
-        onPress={onPress}
-        style={({pressed}) => [
-          styles.pressable,
-          pressed && styles.pressablePressed,
-        ]}
-      >
-        <Text style={[styles.text, disabled && styles.textDisabled]}>{label}</Text>
-      </Pressable>
-    </View>
+    <Pressable
+      disabled={disabled}
+      onPress={onPress}
+      style={({pressed}) => [
+        styles.pressable,
+        pressed && styles.pressablePressed,
+      ]}
+    >
+      <Text style={[styles.text, disabled && styles.textDisabled]}>{label}</Text>
+    </Pressable>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    borderColor: "rgba(0, 0, 0, 1)",
-    borderRadius: 4,
-    borderWidth: 1,
-    height: 40,
-  },
   pressable: {
     alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 1)",
+    backgroundColor: "rgba(165, 165, 165, 1)",
     borderRadius: 4,
-    flex: 1,
-    justifyContent: "center"
+    height: 40,
+    justifyContent: "center",
+    elevation: 3,
+    shadowColor: "rgba(0, 0, 0, 1)(255, 255, 255, 1)",
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    shadowOffset: { width: 0, height: 1 },
   },
   pressablePressed: {
-    opacity: 0.2
+    opacity: 0.8,
   },
   text: {
     fontSize: 16,

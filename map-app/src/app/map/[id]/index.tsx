@@ -13,6 +13,7 @@ export default function PostScreen() {
   const [postDetails, setPostDetails] = useState<PostScreenData | null>(null)
   const [showError, setShowError] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>("")
+  const [isPressed, setIsPressed] = useState<boolean>(false)
   const {id} = useLocalSearchParams<{id: string}>()
   const postId = Number(id)
   const insets: EdgeInsets = useSafeAreaInsets()
@@ -21,6 +22,7 @@ export default function PostScreen() {
   useFocusEffect(
     useCallback(() => {
       fetchPost()
+      setIsPressed(false)
     }, [])
   )
   
@@ -50,6 +52,8 @@ export default function PostScreen() {
   }
 
   const navigateToReplyScreen = (): void =>{
+    setIsPressed(true)
+
     router.push({
       pathname: "/map/[id]/new-sighting",
       params: {id: postId}
@@ -67,7 +71,11 @@ export default function PostScreen() {
             </ScrollView>
           </View>
           <View style={[styles.buttonContainer, {paddingBottom: insets.bottom}]}>
-            <CustomButton onPress={navigateToReplyScreen} label="Reply" />
+            <CustomButton 
+              disabled={isPressed} 
+              onPress={navigateToReplyScreen} 
+              label="Reply" 
+            />
           </View>
         </>
       }

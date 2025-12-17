@@ -11,6 +11,7 @@ class User(Base):
   hashed_password = Column(String(255), nullable=False)
 
   posts = relationship("Post", back_populates="user", cascade="all, delete")
+  sightings = relationship("Sighting", back_populates="user", cascade="all, delete")
 
 class Post(Base):
   __tablename__ = "posts"
@@ -24,4 +25,18 @@ class Post(Base):
 
   user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
   user = relationship("User", back_populates="posts")
+
+  sightings = relationship("Sighting", back_populates="post", cascade="all, delete")
+
+class Sighting(Base):
+  __tablename__ = "sightings"
+
+  id = Column(Integer, primary_key=True)
+  description = Column(String(500), nullable=False)
+
+  user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
+  user = relationship("User", back_populates="sightings")
+
+  post_id = Column(Integer, ForeignKey("posts.id", ondelete="CASCADE"))
+  post = relationship("Post", back_populates="sightings")
   

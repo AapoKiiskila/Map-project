@@ -161,9 +161,14 @@ export default function CreatePostScreen() {
                 label: "Pet",
                 icon: "dog-side",
                 style: {
+                  elevation: 3,
+                  backgroundColor: type === "pet" ? "rgba(165, 165, 165, 1)" : "rgba(255, 255, 255, 1)",
                   borderRadius: 4,
-                  borderColor: "rgba(0, 0, 0, 1)",
-                  backgroundColor: type === "pet" ? "rgba(199, 199, 205, 1)" : "rgba(255, 255, 255, 1)" 
+                  borderWidth: 0,
+                  shadowColor: "rgba(0, 0, 0, 1)(255, 255, 255, 1)",
+                  shadowOpacity: 0.22,
+                  shadowRadius: 2.22,
+                  shadowOffset: { width: 0, height: 1 },
                 }
               },
               {
@@ -171,9 +176,14 @@ export default function CreatePostScreen() {
                 label: "Item",
                 icon: "bag-personal",
                 style: {
-                  borderRadius: 4, 
-                  borderColor: "rgba(0, 0, 0, 1)", 
-                  backgroundColor: type === "item" ? "rgba(199, 199, 205, 1)" : "rgba(255, 255, 255, 1)", 
+                  elevation: 3,
+                  backgroundColor: type === "item" ? "rgba(165, 165, 165, 1)" : "rgba(255, 255, 255, 1)",
+                  borderRadius: 4,
+                  borderWidth: 0,
+                  shadowColor: "rgba(0, 0, 0, 1)(255, 255, 255, 1)",
+                  shadowOpacity: 0.22,
+                  shadowRadius: 2.22,
+                  shadowOffset: { width: 0, height: 1 },
                 }
               },
             ]}
@@ -182,7 +192,7 @@ export default function CreatePostScreen() {
       </View>
       <View style={[styles.lowerContent, {paddingBottom: insets.bottom}]}>
         <CustomButton 
-          disabled={!title || !details || titleError || detailsError || !type}
+          disabled={!title || !details || titleError || detailsError || !type || isSubmitted}
           label="Submit"
           onPress={submit}
         />

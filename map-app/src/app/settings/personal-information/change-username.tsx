@@ -112,7 +112,7 @@ export default function ChangeUsernameScreen() {
         </View>
         <View style={[styles.lowerContent, {paddingBottom: insets.bottom}]}>
           <CustomButton 
-            disabled={!newUsername || newUsernameError}
+            disabled={!newUsername || newUsernameError || isSubmitted}
             label="Submit" 
             onPress={changeUsername} 
           />

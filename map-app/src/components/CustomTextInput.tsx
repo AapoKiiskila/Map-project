@@ -65,9 +65,13 @@ const styles = StyleSheet.create({
   },
   container: {
     flexDirection: "row",
-    borderWidth: 1,
-    borderRadius: 4,
     backgroundColor: "rgba(255, 255, 255, 1)",
+    borderRadius: 4,
+    elevation: 3,
+    shadowColor: "rgba(0, 0, 0, 1)(255, 255, 255, 1)",
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    shadowOffset: { width: 0, height: 1 },
   },
   containerFocused: {
     position: "absolute",
@@ -76,7 +80,7 @@ const styles = StyleSheet.create({
     left: -1,
     right: -1,
     borderColor: "rgba(0, 0, 0, 1)",
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: 4,
   },
   error: {
@@ -86,7 +90,7 @@ const styles = StyleSheet.create({
     left: -1,
     right: -1,
     borderColor: "rgb(186, 26, 26)",
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: 4,
   },
   leftIcon: {

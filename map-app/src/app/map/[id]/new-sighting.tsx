@@ -1,18 +1,28 @@
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context"
+import { ErrorResponse } from "../../../types/ErrorResponse"
 import { CustomButton } from "../../../components/CustomButton"
 import { CustomTextInput } from "../../../components/CustomTextInput"
+import { CreateSightingPayload } from "../../../types/CreateSightingPayload"
 import { Keyboard, KeyboardAvoidingView, Platform, Pressable, StyleSheet, View } from "react-native"
+import { LoadingModal } from "../../../components/LoadingModal"
 import React, { useEffect, useState } from "react"
+import { SuccessResponse } from "../../../types/SuccessResponse"
 import { TextInputInfoText } from "../../../components/TextInputInfoText"
 import { useLocalSearchParams } from "expo-router"
+import { useRouter } from "expo-router"
 
 export default function ReplyScreen() {
   const [description, setDescription] = useState<string>("")
   const [descriptionError, setDescriptionError] = useState<boolean>(false)
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [alertMessage, setAlertMessage] = useState<string>("")
+  const [errorMessage, setErrorMessage] = useState<string>("")
   const [behaviour, setBehaviour] = useState<"height" | undefined>("height")
   const {id} = useLocalSearchParams<{id: string}>()
   const postId = Number(id)
   const insets: EdgeInsets = useSafeAreaInsets()
+  const router = useRouter()
 
   useEffect(() => {
     const showKeyboardListener = Keyboard.addListener("keyboardDidShow", () => {
@@ -48,7 +58,35 @@ export default function ReplyScreen() {
   }
 
   const submit = async (): Promise<void> => {
+    setIsSubmitted(true)
+    setIsLoading(true)
 
+    const payload: CreateSightingPayload = {
+      description: description,
+      user_id: 2, // Hardcoded for testing purposes
+      post_id: postId,
+    }
+
+    try {
+      const response: Response = await fetch("http://192.168.1.102:8000/sightings/create-sighting", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(payload)
+      })
+        
+      if (response.ok) {
+        const data: SuccessResponse = await response.json()
+        setIsLoading(false)
+        setAlertMessage(data.message)
+      } else {
+        const errorData: ErrorResponse = await response.json()
+        setIsLoading(false)
+        setErrorMessage(errorData.detail)
+      }
+    } catch (error) {
+        setIsLoading(false)
+        setErrorMessage("Something went wrong. Please try again later.")
+      }
   }
 
   return(
@@ -80,12 +118,20 @@ export default function ReplyScreen() {
         </View>
         <View style={[styles.lowerContent, {paddingBottom: insets.bottom}]}>
           <CustomButton 
-            disabled={!description || descriptionError}
+            disabled={!description || descriptionError || isSubmitted}
             label="Submit" 
             onPress={submit} 
           />
         </View>
       </Pressable>
+
+      <LoadingModal 
+        alertMessage={alertMessage} 
+        errorMessage={errorMessage}
+        isLoading={isLoading} 
+        isVisible={isSubmitted}
+        onPress={() => router.replace("/map")}
+      />
     </KeyboardAvoidingView>
   )
 }
