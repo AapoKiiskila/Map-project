@@ -25,12 +25,13 @@ export default function Layout() {
         }}
       />
       <Tabs.Screen 
-        name="messages"
+        name="posts"
         options={{
-          headerShown: false,
+          headerShown: true,
+          title: "My posts",
           tabBarIcon: ({ color, size }) => (
             <Ionicons
-              name="chatbox-outline"
+              name="folder-open-outline"
               size={size}
               color={color}
             />

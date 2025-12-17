@@ -19,3 +19,8 @@ class PostCreate(BaseModel):
   latitude: Decimal
   longitude: Decimal
   user_id: int
+
+class PostFetchMyPosts(BaseModel):
+  id: int
+  title: str
+  
