@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from datetime import datetime
 from decimal import Decimal
 
 class PostFetchResponse(BaseModel):
@@ -23,4 +24,4 @@ class PostCreate(BaseModel):
 class PostFetchMyPosts(BaseModel):
   id: int
   title: str
-  
+  time_created: datetime

@@ -22,7 +22,7 @@ def get_user_posts(user_id: int, db: Session):
   if not user:
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
   
-  posts = db.query(Post).filter(Post.user_id == user_id).all()
+  posts = db.query(Post).filter(Post.user_id == user_id).order_by(Post.time_created.desc()).all()
 
   return posts
 

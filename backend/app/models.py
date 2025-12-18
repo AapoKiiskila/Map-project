@@ -1,5 +1,5 @@
 from app.database import Base
-from sqlalchemy import Column, DECIMAL, ForeignKey, Integer, String
+from sqlalchemy import Column, DateTime, DECIMAL, ForeignKey, func, Integer, String
 from sqlalchemy.orm import relationship
 
 class User(Base):
@@ -22,6 +22,7 @@ class Post(Base):
   type = Column(String(6), nullable=False)
   latitude = Column(DECIMAL(18, 15), nullable=False)
   longitude = Column(DECIMAL(18, 15), nullable=False)
+  time_created = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
 
   user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
   user = relationship("User", back_populates="posts")

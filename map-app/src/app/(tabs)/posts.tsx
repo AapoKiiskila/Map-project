@@ -2,6 +2,7 @@ import { FlatList, Pressable, StyleSheet, Text, View } from "react-native"
 import { ErrorResponse } from "../../types/ErrorResponse"
 import { Ionicons } from "@expo/vector-icons"
 import { LoadingModal } from "../../components/LoadingModal"
+import { LocalDateAndTime } from "../../components/LocalDateAndTime"
 import { MyPost } from "../../types/MyPost"
 import React, { useCallback, useState} from "react"
 import { useFocusEffect } from "@react-navigation/native"
@@ -36,7 +37,6 @@ export default function PostsScreen() {
     }
   }
   
-
   return(
     <View style={styles.mainContainer}>
       <FlatList
@@ -47,7 +47,7 @@ export default function PostsScreen() {
           <Pressable key={item.id} style={styles.postContainer}>
             <View style={styles.textContainer}>
               <Text style={styles.postTitle}>{item.title}</Text>
-              <Text style={styles.timeText}>Created: 17.12.2025</Text> {/*Placeholder*/}
+              <LocalDateAndTime time={item.time_created} />
             </View>
             <Ionicons 
               name="chevron-forward" 
