@@ -34,7 +34,8 @@ export default function MapScreen() {
       } else {
         setFetchError(true)
       }
-    } catch (error) {
+    } 
+    catch (error) {
       setFetchError(true)
     }
   }
@@ -171,12 +172,12 @@ const styles = StyleSheet.create({
   message: {
     fontSize: 16,
     marginTop: 8,
-    textAlign: "center"
+    textAlign: "center",
   },
   buttonContainer: {
     flexDirection: "row",
     marginTop: 20,
-    gap: 20
+    gap: 20,
   },
   cancelButton: {
     backgroundColor: "rgba(255, 0, 0, 1)",
@@ -184,12 +185,12 @@ const styles = StyleSheet.create({
     height: 40,
     width: "30%",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   buttonText: {
     fontWeight: 500,
     fontSize: 16,
-    color: "rgba(255, 255, 255, 1)"
+    color: "rgba(255, 255, 255, 1)",
   },
   confirmButton: {
     backgroundColor: "rgba(54, 190, 0, 1)",
@@ -197,6 +198,6 @@ const styles = StyleSheet.create({
     height: 40,
     width: "30%",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
 })

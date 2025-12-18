@@ -11,7 +11,6 @@ import { useRouter } from "expo-router"
 
 export default function PostScreen() {
   const [postDetails, setPostDetails] = useState<PostScreenData | null>(null)
-  const [showError, setShowError] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>("")
   const [isPressed, setIsPressed] = useState<boolean>(false)
   const {id} = useLocalSearchParams<{id: string}>()
@@ -40,14 +39,14 @@ export default function PostScreen() {
         const errorData: ErrorResponse = await response.json()
         setErrorMessage(errorData.detail)
       }
-    } catch (error) {
-      setShowError(true)
+    }
+    catch (error) {
+      setErrorMessage("Something went wrong. Please try again later.")
     }
   }
 
   const showErrorAndGoBack = (): void => {
     setErrorMessage("")
-    setShowError(false)
     router.back()
   }
 
@@ -88,15 +87,6 @@ export default function PostScreen() {
           onPress={showErrorAndGoBack}
         />
       }
-
-      {showError &&
-        <LoadingModal 
-          errorMessage={"Something went wrong. Please try again later."} 
-          isLoading={false} 
-          isVisible={true}
-          onPress={showErrorAndGoBack}
-        />
-      }
     </View>
   )
 }
@@ -129,7 +119,7 @@ const styles = StyleSheet.create({
   detailsText: {
     fontSize: 16,
     marginTop: 10,
-    lineHeight: 24
+    lineHeight: 24,
   },
   buttonContainer: {
     width: "95%",  

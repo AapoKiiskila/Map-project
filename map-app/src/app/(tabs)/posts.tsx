@@ -1,6 +1,7 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native"
 import { ErrorResponse } from "../../types/ErrorResponse"
 import { Ionicons } from "@expo/vector-icons"
+import { LoadingModal } from "../../components/LoadingModal"
 import { MyPost } from "../../types/MyPost"
 import React, { useCallback, useState} from "react"
 import { useFocusEffect } from "@react-navigation/native"
@@ -29,7 +30,8 @@ export default function PostsScreen() {
         const errorData: ErrorResponse = await response.json()
         setErrorMessage(errorData.detail)
       }
-    } catch (error) {
+    }
+    catch (error) {
       setErrorMessage("Something went wrong. Please try again later.")
     }
   }
@@ -55,6 +57,15 @@ export default function PostsScreen() {
           </Pressable>
         )}
       />
+
+      {errorMessage &&
+        <LoadingModal 
+          errorMessage={errorMessage} 
+          isLoading={false} 
+          isVisible={true}
+          onPress={() => setErrorMessage("")}
+        />
+      }
     </View>
   )
 }

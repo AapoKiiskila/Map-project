@@ -76,17 +76,18 @@ export default function ReplyScreen() {
         
       if (response.ok) {
         const data: SuccessResponse = await response.json()
-        setIsLoading(false)
         setAlertMessage(data.message)
       } else {
         const errorData: ErrorResponse = await response.json()
-        setIsLoading(false)
         setErrorMessage(errorData.detail)
       }
-    } catch (error) {
-        setIsLoading(false)
+    } 
+    catch (error) {
         setErrorMessage("Something went wrong. Please try again later.")
-      }
+    }
+    finally {
+      setIsLoading(false)
+    }
   }
 
   return(
