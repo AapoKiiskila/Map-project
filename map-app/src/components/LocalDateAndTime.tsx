@@ -6,10 +6,11 @@ import { StyleSheet, Text, View } from "react-native"
 type Props = {
   accureateAfterWeek?: boolean
   alwaysAccurateTime?: boolean
+  text?: string
   time: string
 }
 
-export function LocalDateAndTime({ accureateAfterWeek, alwaysAccurateTime, time }: Props) {
+export function LocalDateAndTime({ accureateAfterWeek, alwaysAccurateTime, text, time }: Props) {
   const pastDateAndTime: Date = new Date(time + "Z")
   const result: string = formatDistanceToNowStrict(pastDateAndTime, {locale: enGB, addSuffix: true})
   const accurateTime: string = format(pastDateAndTime, "PPp", {locale: enGB})
@@ -20,7 +21,7 @@ export function LocalDateAndTime({ accureateAfterWeek, alwaysAccurateTime, time 
 
   return(
     <View>
-      <Text style={styles.text}>{displayTime}</Text>
+      <Text style={styles.text}>{text}{displayTime}</Text>
     </View>
   )
 }

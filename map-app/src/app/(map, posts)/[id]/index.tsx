@@ -2,6 +2,7 @@ import { CustomButton } from "../../../components/CustomButton"
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context"
 import { ErrorResponse } from "../../../types/ErrorResponse"
 import { LoadingModal } from "../../../components/LoadingModal"
+import { LocalDateAndTime } from "../../../components/LocalDateAndTime"
 import { PostScreenData } from "../../../types/PostScreenData"
 import React, { useCallback, useState} from "react"
 import { ScrollView, StyleSheet, Text, View } from "react-native"
@@ -71,11 +72,27 @@ export default function PostScreen() {
     <View style={styles.mainContainer}>
       {postDetails &&
         <>
-          <View style={styles.scrollViewContainer}>
-            <ScrollView>
-              <Text style={styles.titleText}>{postDetails.title}</Text>
-              <Text style={styles.detailsText}>{postDetails.details}</Text>
-            </ScrollView>
+          <View style={styles.upperContent}>
+            <View style={styles.scrollViewContainer}>
+              <ScrollView>
+                <Text style={styles.titleText}>{postDetails.title}</Text>
+                <Text style={styles.detailsText}>{postDetails.details}</Text>
+              </ScrollView>
+            </View>
+            <View style={styles.dateTimeTextContainer}>
+              <LocalDateAndTime 
+                alwaysAccurateTime={true} 
+                text="Created: " 
+                time={postDetails.time_created} 
+              />
+              {postDetails.time_created !== postDetails.time_updated && 
+                <LocalDateAndTime
+                  alwaysAccurateTime={true}
+                  text="Updated: " 
+                  time={postDetails.time_created}
+                />
+              }
+            </View>
           </View>
           <View style={[styles.buttonContainer, {paddingBottom: insets.bottom}]}>
             <CustomButton 
@@ -106,9 +123,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  upperContent: {
+    width: "95%",
+  },
   scrollViewContainer: {
     backgroundColor: "rgba(255, 255, 255, 1)",
-    width: "95%",
     maxHeight: 600,
     marginTop: 20,
     padding: 10,
@@ -128,6 +147,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 10,
     lineHeight: 24,
+  },
+  dateTimeTextContainer: {
+    alignItems: "flex-end",
+    marginRight: 5,
+    marginTop: 5,
+    gap: 5,
   },
   buttonContainer: {
     width: "95%",  

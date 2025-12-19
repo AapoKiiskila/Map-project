@@ -12,6 +12,8 @@ class PostFetchResponse(BaseModel):
 class PostDataResponse(BaseModel):
   title: str
   details: str
+  time_created: datetime
+  time_updated: datetime
   user_id: int
 
 class PostCreate(BaseModel):
