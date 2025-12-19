@@ -12,6 +12,7 @@ class PostFetchResponse(BaseModel):
 class PostDataResponse(BaseModel):
   title: str
   details: str
+  user_id: int
 
 class PostCreate(BaseModel):
   title: str

@@ -27,6 +27,7 @@ export default function CreatePostScreen() {
   const {latitude, longitude} = useLocalSearchParams<{latitude: string, longitude: string}>()
   const lat = Number(latitude)
   const lon = Number(longitude)
+  const userId: number = 1  // Hardcoded for testing purposes
   
   const checkTitle = (): void => {
     if (!title || title.trim() === "") {
@@ -84,7 +85,7 @@ export default function CreatePostScreen() {
       type: type,
       latitude: lat,
       longitude: lon,
-      user_id: 1,  // Hardcoded for testing purposes
+      user_id: userId,
     }
 
     try {

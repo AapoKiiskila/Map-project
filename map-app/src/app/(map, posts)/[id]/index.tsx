@@ -17,6 +17,7 @@ export default function PostScreen() {
   const postId = Number(id)
   const insets: EdgeInsets = useSafeAreaInsets()
   const router = useRouter()
+  const userId: number = 1  // Hardcoded for testing purposes
 
   useFocusEffect(
     useCallback(() => {
@@ -50,13 +51,20 @@ export default function PostScreen() {
     router.back()
   }
 
-  const navigateToReplyScreen = (): void =>{
+  const navigateToScreen = (): void =>{
     setIsPressed(true)
 
-    router.push({
-      pathname: "/map/[id]/new-sighting",
-      params: {id: postId}
-    })
+    if (postDetails?.user_id === userId) {
+      router.push({
+        pathname: "/[id]/edit-post",
+        params: {id: postId}
+      })
+    } else {
+      router.push({
+        pathname: "/[id]/new-sighting",
+        params: {id: postId}
+      })
+    }
   }
 
   return(
@@ -72,8 +80,8 @@ export default function PostScreen() {
           <View style={[styles.buttonContainer, {paddingBottom: insets.bottom}]}>
             <CustomButton 
               disabled={isPressed} 
-              onPress={navigateToReplyScreen} 
-              label="Reply" 
+              onPress={navigateToScreen} 
+              label={postDetails.user_id === userId ? "Edit" : "Reply"}
             />
           </View>
         </>

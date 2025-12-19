@@ -14,6 +14,7 @@ export default function MapScreen() {
   const [showFetchError, setShowFetchError] = useState<boolean>(false)
   const [modalVisible, setModalVisible] = useState<boolean>(false)
   const router = useRouter()
+  const userId: number = 1  // Hardcoded for testing purposes
 
   useFocusEffect(
     useCallback(() => {
@@ -46,7 +47,7 @@ export default function MapScreen() {
       return
     }
 
-    const userPosts: PostMarker[] = markers?.filter((marker) => marker.user_id === 1) ?? [] // Id hardcoded for testing purposes
+    const userPosts: PostMarker[] = markers?.filter((marker) => marker.user_id === userId) ?? [] // Id hardcoded for testing purposes
     const userPostCount: number = userPosts.length
 
     if (3 <= userPostCount) {
@@ -67,7 +68,7 @@ export default function MapScreen() {
     }
 
     router.push({
-      pathname: "/map/create-post",
+      pathname: "/create-post",
       params: {
         latitude: userMarker.latitude,
         longitude: userMarker.longitude
@@ -85,7 +86,7 @@ export default function MapScreen() {
 
   const navigateToPost = (id: number): void => {
     router.push({
-      pathname: "/map/[id]",
+      pathname: "/[id]",
       params: {id: id}
     })
   }
@@ -100,7 +101,7 @@ export default function MapScreen() {
             coordinate={{latitude: Number(marker.latitude), longitude: Number(marker.longitude)}}
             onPress={() => navigateToPost(marker.id)}
             pinColor={
-              marker.user_id === 1 ? "rgba(255, 0, 0, 1)"
+              marker.user_id === userId ? "rgba(255, 0, 0, 1)"
               : marker.type === "Animal" ? "rgba(255, 196, 0, 1)"
               : "rgba(0, 60, 255, 1)"
             }

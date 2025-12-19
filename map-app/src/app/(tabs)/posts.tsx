@@ -10,6 +10,7 @@ import { useFocusEffect } from "@react-navigation/native"
 export default function PostsScreen() {
   const [posts, setPosts] = useState<MyPost[] | null>(null)
   const [errorMessage, setErrorMessage] = useState<string>("")
+  const userId: number = 1  // Hardcoded for testing purposes
 
   useFocusEffect(
     useCallback(() => {
@@ -19,7 +20,7 @@ export default function PostsScreen() {
 
   const fetchMyPosts = async (): Promise<void> => {
     try {
-      const response: Response = await fetch(`http://192.168.1.102:8000/posts/user/1`, {
+      const response: Response = await fetch(`http://192.168.1.102:8000/posts/user/${userId}`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
       })

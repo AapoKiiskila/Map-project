@@ -13,7 +13,7 @@ export default function SettingsScreen() {
   return(
     <View style={styles.container}>
       <View style={styles.contentContainer}>
-        <SettingsButton onPress={() => router.push("settings/personal-information")} text="Personal information" />
+        <SettingsButton onPress={() => router.push("/personal-information")} text="Personal information" />
         <SettingsButton onPress={signOut} signOut={true} text="Sign out" />
       </View>
     </View>
