@@ -6,15 +6,19 @@ import { LocalDateAndTime } from "../../components/LocalDateAndTime"
 import { MyPost } from "../../types/MyPost"
 import React, { useCallback, useState} from "react"
 import { useFocusEffect } from "@react-navigation/native"
+import { useRouter } from "expo-router"
 
 export default function PostsScreen() {
   const [posts, setPosts] = useState<MyPost[] | null>(null)
   const [errorMessage, setErrorMessage] = useState<string>("")
+  const [isPressed, setIsPressed] = useState<boolean>(false)
   const userId: number = 1  // Hardcoded for testing purposes
+  const router = useRouter()
 
   useFocusEffect(
     useCallback(() => {
       fetchMyPosts()
+      setIsPressed(false)
     }, [])
   )
 
@@ -37,6 +41,15 @@ export default function PostsScreen() {
       setErrorMessage("Something went wrong. Please try again later.")
     }
   }
+
+  const navigate = (id: number): void => {
+    setIsPressed(true)
+
+    router.push({
+      pathname: "/[id]",
+      params: {id: id}
+    })
+  }
   
   return(
     <View style={styles.mainContainer}>
@@ -45,7 +58,15 @@ export default function PostsScreen() {
         data={posts}
         keyExtractor={item => String(item.id)}
         renderItem={({item}) => (
-          <Pressable key={item.id} style={styles.postContainer}>
+          <Pressable
+            disabled={isPressed}
+            key={item.id}
+            onPress={() => navigate(item.id)}
+            style={({pressed}) => [
+              styles.postContainer,
+              pressed && styles.pressablePressed,
+            ]}
+          >
             <View style={styles.textContainer}>
               <Text style={styles.postTitle}>{item.title}</Text>
               <LocalDateAndTime time={item.time_created} />
@@ -95,6 +116,9 @@ const styles = StyleSheet.create({
     shadowRadius: 2.22,
     shadowOffset: { width: 0, height: 1 },
   },
+  pressablePressed: {
+    opacity: 0.2,
+  },
   textContainer: {
     gap: 5,
   },
@@ -104,5 +128,5 @@ const styles = StyleSheet.create({
   },
   timeText: {
     fontSize: 12,
-  }
+  },
 })
