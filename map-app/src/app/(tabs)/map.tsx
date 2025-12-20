@@ -84,10 +84,10 @@ export default function MapScreen() {
     setModalVisible(false)
   }
 
-  const navigateToPost = (id: number): void => {
+  const navigateToPost = (id: number, type: string): void => {
     router.push({
       pathname: "/[id]",
-      params: {id: id}
+      params: {id: id, type: type}
     })
   }
 
@@ -99,7 +99,7 @@ export default function MapScreen() {
           <Marker
             key={marker.id}
             coordinate={{latitude: Number(marker.latitude), longitude: Number(marker.longitude)}}
-            onPress={() => navigateToPost(marker.id)}
+            onPress={() => navigateToPost(marker.id, marker.type)}
             pinColor={
               marker.user_id === userId ? "rgba(255, 0, 0, 1)"
               : marker.type === "Animal" ? "rgba(255, 196, 0, 1)"

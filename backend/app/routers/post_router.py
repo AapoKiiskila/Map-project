@@ -21,3 +21,7 @@ def fetch_user_posts(user_id: int, db: Session = Depends(get_db)):
 @router.post("/posts/create-post", status_code=status.HTTP_201_CREATED)
 def create_new_post(new_post: post_schema.PostCreate, db: Session = Depends(get_db)):
   return post_crud.create_post(new_post, db)
+
+@router.put("/posts/{post_id}", status_code=status.HTTP_200_OK)
+def fetch_one_post(post_id: int, update_data: post_schema.PostUpdate, db: Session = Depends(get_db)):
+  return post_crud.update_post(post_id, update_data, db)

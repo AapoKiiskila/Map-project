@@ -57,3 +57,22 @@ def create_post(new_post: post_schema.PostCreate, db: Session):
   db.commit()
 
   return {"message": "Post created successfully"}
+
+def update_post(post_id: str, update_data: post_schema.PostUpdate, db: Session):
+  post = db.query(Post).filter(Post.id == post_id).first()
+
+  if not post:
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found")
+  
+  if update_data.title:
+    post.title = update_data.title
+
+  if update_data.details:
+    post.details = update_data.details
+
+  if update_data.type:
+    post.type = update_data.type
+
+  db.commit()
+
+  return {"message": "Post has been updated"}

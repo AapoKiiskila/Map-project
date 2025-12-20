@@ -42,12 +42,12 @@ export default function PostsScreen() {
     }
   }
 
-  const navigate = (id: number): void => {
+  const navigate = (id: number, type: string): void => {
     setIsPressed(true)
 
     router.push({
       pathname: "/[id]",
-      params: {id: id}
+      params: {id: id, type: type}
     })
   }
   
@@ -61,7 +61,7 @@ export default function PostsScreen() {
           <Pressable
             disabled={isPressed}
             key={item.id}
-            onPress={() => navigate(item.id)}
+            onPress={() => navigate(item.id, item.type)}
             style={({pressed}) => [
               styles.postContainer,
               pressed && styles.pressablePressed,

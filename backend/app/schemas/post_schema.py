@@ -27,4 +27,10 @@ class PostCreate(BaseModel):
 class PostFetchMyPosts(BaseModel):
   id: int
   title: str
+  type: str
   time_created: datetime
+
+class PostUpdate(BaseModel):
+  title: str | None = None
+  details: str | None = None
+  type: str | None = None

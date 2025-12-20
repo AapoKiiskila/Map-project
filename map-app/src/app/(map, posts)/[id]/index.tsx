@@ -14,7 +14,7 @@ export default function PostScreen() {
   const [postDetails, setPostDetails] = useState<PostScreenData | null>(null)
   const [errorMessage, setErrorMessage] = useState<string>("")
   const [isPressed, setIsPressed] = useState<boolean>(false)
-  const {id} = useLocalSearchParams<{id: string}>()
+  const {id, type} = useLocalSearchParams<{id: string, type: string}>()
   const postId = Number(id)
   const insets: EdgeInsets = useSafeAreaInsets()
   const router = useRouter()
@@ -58,7 +58,12 @@ export default function PostScreen() {
     if (postDetails?.user_id === userId) {
       router.push({
         pathname: "/[id]/edit-post",
-        params: {id: postId}
+        params: {
+          id: postId, 
+          title: postDetails.title, 
+          details: postDetails.details, 
+          type: type
+        }
       })
     } else {
       router.push({
