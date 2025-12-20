@@ -23,7 +23,7 @@ class Post(Base):
   latitude = Column(DECIMAL(18, 15), nullable=False)
   longitude = Column(DECIMAL(18, 15), nullable=False)
   time_created = Column(DateTime, nullable=False, server_default=func.UTC_TIMESTAMP())
-  time_updated = Column(DateTime, nullable=False, server_default=func.UTC_TIMESTAMP())
+  time_updated = Column(DateTime, nullable=False, server_default=func.UTC_TIMESTAMP(), onupdate=func.UTC_TIMESTAMP())
 
   user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
   user = relationship("User", back_populates="posts")

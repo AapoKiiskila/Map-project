@@ -94,7 +94,7 @@ export default function PostScreen() {
                 <LocalDateAndTime
                   alwaysAccurateTime={true}
                   text="Updated: " 
-                  time={postDetails.time_created}
+                  time={postDetails.time_updated}
                 />
               }
             </View>
