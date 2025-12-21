@@ -30,3 +30,24 @@ def create_sighting(new_sighting: sighting_schema.SightingCreate, db: Session):
   db.commit()
 
   return {"message": "Sighting created successfully"}
+
+def get_received_sightings(user_id: int, db: Session):
+  user = db.query(User).filter(User.id == user_id).first()
+  
+  if not user:
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+  
+  sightings = (
+    db.query(
+      Post.title, 
+      Sighting.description, 
+      User.username, 
+      Sighting.time_created
+    )
+    .join(Sighting, User.id == Sighting.user_id)
+    .join(Post, Sighting.post_id == Post.id)
+    .order_by(Sighting.time_created.desc())
+    .all()
+  )
+
+  return sightings
