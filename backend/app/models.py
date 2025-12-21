@@ -35,6 +35,7 @@ class Sighting(Base):
 
   id = Column(Integer, primary_key=True)
   description = Column(String(500), nullable=False)
+  time_created = Column(DateTime, nullable=False, server_default=func.UTC_TIMESTAMP())
 
   user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
   user = relationship("User", back_populates="sightings")

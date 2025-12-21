@@ -11,7 +11,7 @@ import { TextInputInfoText } from "../../../components/TextInputInfoText"
 import { useLocalSearchParams } from "expo-router"
 import { useRouter } from "expo-router"
 
-export default function ReplyScreen() {
+export default function NewSightingScreen() {
   const [description, setDescription] = useState<string>("")
   const [descriptionError, setDescriptionError] = useState<boolean>(false)
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false)
