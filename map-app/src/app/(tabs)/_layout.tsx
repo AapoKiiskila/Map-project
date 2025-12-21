@@ -25,6 +25,20 @@ export default function Layout() {
         }}
       />
       <Tabs.Screen 
+        name="sightings"
+        options={{
+          headerShown: true,
+          title: "Sightings",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons
+              name="mail-outline"
+              size={size}
+              color={color}
+            />
+          )
+        }}
+      />
+      <Tabs.Screen 
         name="posts"
         options={{
           headerShown: true,
