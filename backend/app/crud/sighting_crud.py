@@ -44,8 +44,9 @@ def get_received_sightings(user_id: int, db: Session):
       User.username, 
       Sighting.time_created
     )
-    .join(Sighting, User.id == Sighting.user_id)
-    .join(Post, Sighting.post_id == Post.id)
+    .filter(User.id == user_id)
+    .join(Post, User.id == Post.user_id)
+    .join(Sighting, Post.id == Sighting.post_id)
     .order_by(Sighting.time_created.desc())
     .all()
   )
