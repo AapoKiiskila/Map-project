@@ -9,5 +9,9 @@ class SightingCreate(BaseModel):
 class SightingFetchReceived(BaseModel):
   title: str
   description: str
-  username: str
+  id: int
+  post_id: int
+  user_id: int
   time_created: datetime
+  username: str
+

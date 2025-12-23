@@ -39,10 +39,13 @@ def get_received_sightings(user_id: int, db: Session):
   
   sightings = (
     db.query(
-      Post.title, 
-      Sighting.description, 
-      User.username, 
-      Sighting.time_created
+      Post.title,
+      Sighting.description,
+      Sighting.id,
+      Sighting.post_id,
+      Sighting.user_id,
+      Sighting.time_created,
+      User.username,
     )
     .filter(User.id == user_id)
     .join(Post, User.id == Post.user_id)
