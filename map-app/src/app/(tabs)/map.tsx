@@ -86,8 +86,8 @@ export default function MapScreen() {
 
   const navigateToPost = (id: number, type: string): void => {
     router.push({
-      pathname: "/[id]",
-      params: {id: id, type: type}
+      pathname: `post/${id}`,
+      params: {type: type}
     })
   }
 

@@ -1,16 +1,20 @@
 import { ErrorResponse } from "../../types/ErrorResponse"
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native"
 import Ionicons from "@expo/vector-icons/Ionicons"
+import { LocalDateAndTime } from "../../components/LocalDateAndTime"
 import React, { useCallback, useEffect, useState} from "react"
 import { ReceivedSightingsData } from "../../types/ReceivedSightingsData"
 import { useFocusEffect } from "@react-navigation/native"
 import { useNavigation } from "@react-navigation/native"
+import { useRouter } from "expo-router"
 
 export default function SightingsScreen() {
   const [receivedSightings, setReceivedSightings] = useState<ReceivedSightingsData[] | null>(null)
   const [receivedSightingsError, setReceivedSightingsError] = useState<string>("")
   const [showReceived, setShowReceived] = useState<boolean>(true)
+  const [isPressed, setIsPressed] = useState<boolean>(false)
   const navigation = useNavigation()
+  const router = useRouter()
   const userId: number = 1  // Hardcoded for testing purposes
 
   useEffect(() => {
@@ -27,6 +31,7 @@ export default function SightingsScreen() {
   useFocusEffect(
     useCallback(() => {
       fetchReceivedSightings()
+      setIsPressed(false)
     }, [])
   )
 
@@ -50,10 +55,53 @@ export default function SightingsScreen() {
     }
   }
 
+  const navigateToReceivedSighting = (description: string, id: number, time: string, username: string): void => {
+    setIsPressed(true)
+
+    router.push({
+      pathname: `/sighting/${id}`,
+      params: {
+        description: description, 
+        time: time, 
+        username: username
+      }
+    })
+  }
+
   return(
     <View style={styles.mainContainer}>
 
+      {showReceived &&
+        <FlatList
+          contentContainerStyle={styles.container}
+          data={receivedSightings}
+          keyExtractor={item => String(item.id)}
+          renderItem={({item}) => (
+            <Pressable
+              disabled={isPressed}
+              key={item.id}
+              onPress={() => navigateToReceivedSighting(item.description, item.id, item.time_created, item.username)}
+              style={({pressed}) => [
+                styles.receivedSightingContainer,
+                pressed && styles.pressablePressed,
+              ]}
+            >
+              <View style={styles.textContainer}>
+                <Text style={styles.postTitle}>{item.title}</Text>
+                <Text style={styles.senderName}>{item.username}</Text>
+                <LocalDateAndTime time={item.time_created} />
+              </View>
+              <Ionicons 
+                name="chevron-forward" 
+                size={20} 
+                color="rgba(0, 0, 0, 1)" 
+              />
+            </Pressable>
+          )}
+        />
+      }
 
+      
     </View>
   )
 }
@@ -62,5 +110,40 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: "rgba(255, 255, 255, 1)",
+  },
+  container: {
+    alignItems: "center",
+    gap: 10,
+    paddingVertical: 10,
+  },
+  receivedSightingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    height: 80,
+    width: "95%",
+    backgroundColor: "rgba(255, 255, 255, 1)",
+    paddingHorizontal: 10,
+    elevation: 3,
+    shadowColor: "rgba(0, 0, 0, 1)(255, 255, 255, 1)",
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    shadowOffset: { width: 0, height: 1 },
+  },
+  pressablePressed: {
+    opacity: 0.2,
+  },
+  textContainer: {
+    gap: 5,
+  },
+  postTitle: {
+    fontSize: 16,
+    fontWeight: 500,
+  },
+  senderName: {
+    fontSize: 12,
+  },
+  timeText: {
+    fontSize: 12,
   },
 })

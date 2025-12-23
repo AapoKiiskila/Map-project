@@ -1,13 +1,13 @@
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context"
-import { ErrorResponse } from "../../../types/ErrorResponse"
-import { CustomButton } from "../../../components/CustomButton"
-import { CustomTextInput } from "../../../components/CustomTextInput"
-import { CreateSightingPayload } from "../../../types/CreateSightingPayload"
+import { ErrorResponse } from "../../../../types/ErrorResponse"
+import { CustomButton } from "../../../../components/CustomButton"
+import { CustomTextInput } from "../../../../components/CustomTextInput"
+import { CreateSightingPayload } from "../../../../types/CreateSightingPayload"
 import { Keyboard, KeyboardAvoidingView, Platform, Pressable, StyleSheet, View } from "react-native"
-import { LoadingModal } from "../../../components/LoadingModal"
+import { LoadingModal } from "../../../../components/LoadingModal"
 import React, { useEffect, useState } from "react"
-import { SuccessResponse } from "../../../types/SuccessResponse"
-import { TextInputInfoText } from "../../../components/TextInputInfoText"
+import { SuccessResponse } from "../../../../types/SuccessResponse"
+import { TextInputInfoText } from "../../../../components/TextInputInfoText"
 import { useLocalSearchParams } from "expo-router"
 import { useRouter } from "expo-router"
 
@@ -19,8 +19,8 @@ export default function NewSightingScreen() {
   const [alertMessage, setAlertMessage] = useState<string>("")
   const [errorMessage, setErrorMessage] = useState<string>("")
   const [behaviour, setBehaviour] = useState<"height" | undefined>("height")
-  const {id} = useLocalSearchParams<{id: string}>()
-  const postId = Number(id)
+  const {post} = useLocalSearchParams<{post: string}>()
+  const postId = Number(post)
   const insets: EdgeInsets = useSafeAreaInsets()
   const router = useRouter()
   const userId: number = 1  // Hardcoded for testing purposes

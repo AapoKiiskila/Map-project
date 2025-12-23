@@ -1,9 +1,9 @@
-import { CustomButton } from "../../../components/CustomButton"
+import { CustomButton } from "../../../../components/CustomButton"
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context"
-import { ErrorResponse } from "../../../types/ErrorResponse"
-import { LoadingModal } from "../../../components/LoadingModal"
-import { LocalDateAndTime } from "../../../components/LocalDateAndTime"
-import { PostScreenData } from "../../../types/PostScreenData"
+import { ErrorResponse } from "../../../../types/ErrorResponse"
+import { LoadingModal } from "../../../../components/LoadingModal"
+import { LocalDateAndTime } from "../../../../components/LocalDateAndTime"
+import { PostScreenData } from "../../../../types/PostScreenData"
 import React, { useCallback, useState} from "react"
 import { ScrollView, StyleSheet, Text, View } from "react-native"
 import { useFocusEffect } from "@react-navigation/native"
@@ -14,8 +14,8 @@ export default function PostScreen() {
   const [postDetails, setPostDetails] = useState<PostScreenData | null>(null)
   const [errorMessage, setErrorMessage] = useState<string>("")
   const [isPressed, setIsPressed] = useState<boolean>(false)
-  const {id, type} = useLocalSearchParams<{id: string, type: string}>()
-  const postId = Number(id)
+  const {post, type} = useLocalSearchParams<{post: string, type: string}>()
+  const postId = Number(post)
   const insets: EdgeInsets = useSafeAreaInsets()
   const router = useRouter()
   const userId: number = 1  // Hardcoded for testing purposes
@@ -57,9 +57,8 @@ export default function PostScreen() {
 
     if (postDetails?.user_id === userId) {
       router.push({
-        pathname: "/[id]/edit-post",
+        pathname: `post/${postId}/edit-post`,
         params: {
-          id: postId, 
           title: postDetails.title, 
           details: postDetails.details, 
           type: type
@@ -67,8 +66,7 @@ export default function PostScreen() {
       })
     } else {
       router.push({
-        pathname: "/[id]/new-sighting",
-        params: {id: postId}
+        pathname: `post/${postId}/new-sighting`,
       })
     }
   }

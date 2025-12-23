@@ -1,20 +1,20 @@
-import { CustomButton } from "../../../components/CustomButton"
-import { CustomTextInput } from "../../../components/CustomTextInput"
+import { CustomButton } from "../../../../components/CustomButton"
+import { CustomTextInput } from "../../../../components/CustomTextInput"
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context"
-import { ErrorResponse } from "../../../types/ErrorResponse"
+import { ErrorResponse } from "../../../../types/ErrorResponse"
 import { Keyboard, Pressable, StyleSheet, View } from "react-native"
-import { LoadingModal } from "../../../components/LoadingModal"
+import { LoadingModal } from "../../../../components/LoadingModal"
 import React, { useState} from "react"
 import { SegmentedButtons } from "react-native-paper"
-import { SuccessResponse } from "../../../types/SuccessResponse"
-import { TextInputInfoText } from "../../../components/TextInputInfoText"
+import { SuccessResponse } from "../../../../types/SuccessResponse"
+import { TextInputInfoText } from "../../../../components/TextInputInfoText"
 import { useLocalSearchParams } from "expo-router"
 import { useRouter } from "expo-router"
-import { UpdatePostPayload } from "../../../types/UpdatePostPayload"
+import { UpdatePostPayload } from "../../../../types/UpdatePostPayload"
 
 export default function EditPostScreen() {
-  const {id, title, details, type} = useLocalSearchParams<{id: string, title: string, details: string, type: string}>()
-  const postId = Number(id)
+  const {post, title, details, type} = useLocalSearchParams<{post: string, title: string, details: string, type: string}>()
+  const postId = Number(post)
   const [newTitle, setNewTitle] = useState<string>(title)
   const [newDetails, setNewDetails] = useState<string>(details)
   const [newType, setNewType] = useState<string>(type)

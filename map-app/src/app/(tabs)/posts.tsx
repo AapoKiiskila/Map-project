@@ -46,8 +46,8 @@ export default function PostsScreen() {
     setIsPressed(true)
 
     router.push({
-      pathname: "/[id]",
-      params: {id: id, type: type}
+      pathname: `/post/${id}`,
+      params: {type: type}
     })
   }
   
