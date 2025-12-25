@@ -40,6 +40,7 @@ def get_received_sightings(user_id: int, db: Session):
   sightings = (
     db.query(
       Post.title,
+      Post.type,
       Sighting.description,
       Sighting.id,
       Sighting.post_id,

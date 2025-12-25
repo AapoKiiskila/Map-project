@@ -55,13 +55,16 @@ export default function SightingsScreen() {
     }
   }
 
-  const navigateToReceivedSighting = (description: string, id: number, time: string, username: string): void => {
+  const navigateToReceivedSighting = (description: string, type: string, id: number, postId: number, sightingUserId: number, time: string, username: string): void => {
     setIsPressed(true)
 
     router.push({
       pathname: `/sighting/${id}`,
       params: {
-        description: description, 
+        description: description,
+        type: type,
+        postId: postId,
+        sightingUserId: sightingUserId,
         time: time, 
         username: username
       }
@@ -80,7 +83,7 @@ export default function SightingsScreen() {
             <Pressable
               disabled={isPressed}
               key={item.id}
-              onPress={() => navigateToReceivedSighting(item.description, item.id, item.time_created, item.username)}
+              onPress={() => navigateToReceivedSighting(item.description, item.type, item.id, item.post_id, item.user_id, item.time_created, item.username)}
               style={({pressed}) => [
                 styles.receivedSightingContainer,
                 pressed && styles.pressablePressed,

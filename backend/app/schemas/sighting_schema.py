@@ -8,6 +8,7 @@ class SightingCreate(BaseModel):
 
 class SightingFetchReceived(BaseModel):
   title: str
+  type: str
   description: str
   id: int
   post_id: int
