@@ -37,7 +37,7 @@ export default function SightingsScreen() {
 
   const fetchReceivedSightings = async (): Promise<void> => {
     try {
-      const response: Response = await fetch(`http://192.168.1.102:8000/sightings/${userId}/received`, {
+      const response: Response = await fetch(`http://192.168.1.102:8000/users/${userId}/received-sightings`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
       })

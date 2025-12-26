@@ -13,6 +13,7 @@ export default function MapScreen() {
   const [fetchError, setFetchError] = useState<boolean>(false)
   const [showFetchError, setShowFetchError] = useState<boolean>(false)
   const [modalVisible, setModalVisible] = useState<boolean>(false)
+  const [fetching, setFetching] = useState<boolean>(false)
   const router = useRouter()
   const userId: number = 1  // Hardcoded for testing purposes
 
@@ -23,6 +24,8 @@ export default function MapScreen() {
   )
 
   const fetchPosts = async (): Promise<void> => {
+    setFetching(true)
+
     try {
       const response: Response = await fetch("http://192.168.1.102:8000/posts", {
         method: "GET",
@@ -39,10 +42,13 @@ export default function MapScreen() {
     catch (error) {
       setFetchError(true)
     }
+    finally {
+      setFetching(false)
+    }
   }
 
   const addMarker = (e: LongPressEvent): void => {
-    if (fetchError) {
+    if (fetchError || fetching) {
       setShowFetchError(true)
       return
     }
