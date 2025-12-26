@@ -1,21 +1,24 @@
 import { CustomButton } from "../../../../components/CustomButton"
 import { ConfirmAlert } from "../../../../components/ConfirmAlert"
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context"
+import { ErrorResponse } from "../../../../types/ErrorResponse"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import { LoadingModal } from "../../../../components/LoadingModal"
 import { LocalDateAndTime } from "../../../../components/LocalDateAndTime"
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native"
 import React, { useEffect, useState } from "react"
+import { SuccessResponse } from "../../../../types/SuccessResponse"
 import { useNavigation } from "@react-navigation/native"
 import { useLocalSearchParams, useRouter } from "expo-router"
-
 
 export default function SightingScreen() {
   const [alertMessage, setAlertMessage] = useState<string>("")
   const [errorMessage, setErrorMessage] = useState<string>("")
   const [showConfirmAlert, setShowConfirmAlert] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [showModal, setShowModal] = useState<boolean>(false)
-  const {description, type, postId, sightingUserId, time, username} = useLocalSearchParams<{description: string, type: string, postId: string, sightingUserId: string, time: string, username: string}>()
+  const {sighting, description, type, postId, sightingUserId, time, username} = useLocalSearchParams<{sighting: string, description: string, type: string, postId: string, sightingUserId: string, time: string, username: string}>()
+  const sightingId = Number(sighting)
   const userIdNumber = Number(sightingUserId)
   const userId: number = 2 // Hardcoded for testing purposes
   const navigation = useNavigation()
@@ -40,21 +43,27 @@ export default function SightingScreen() {
   const deleteSighting = async (): Promise<void> => {
     setShowConfirmAlert(false)
     setShowModal(true)
+    setIsLoading(true)
 
     try {
-      const response: Response = await fetch(`http://192.168.1.102:8000/`, {
+      const response: Response = await fetch(`http://192.168.1.102:8000/users/${userId}/sightings/${sightingId}`, {
         method: "DELETE",
         headers: {"Content-Type": "application/json"},
       })
         
       if (response.ok) {
-
+        const data: SuccessResponse = await response.json()
+        setAlertMessage(data.message)
       } else {
-
+        const errorData: ErrorResponse = await response.json()
+        setErrorMessage(errorData.detail)
       }
     }
     catch (error) {
-      
+      setErrorMessage("Something went wrong. Please try again later.")
+    }
+    finally {
+      setIsLoading(false)
     }
   }
 
@@ -101,9 +110,9 @@ export default function SightingScreen() {
       />
 
       <LoadingModal 
-        alertMessage=""
-        errorMessage=""
-        isLoading={false}
+        alertMessage={alertMessage}
+        errorMessage={errorMessage}
+        isLoading={isLoading}
         isVisible={showModal}
         onPress={() => router.back()}
       />

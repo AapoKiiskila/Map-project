@@ -4,9 +4,6 @@ from app.schemas import sighting_schema
 from sqlalchemy.orm import Session
 
 def create_sighting(new_sighting: sighting_schema.SightingCreate, db: Session):
-  print(new_sighting.description)
-  print(new_sighting.user_id)
-  print(new_sighting.post_id)
   user = db.query(User).filter(User.id == new_sighting.user_id).first()
 
   if not user:
@@ -30,3 +27,19 @@ def create_sighting(new_sighting: sighting_schema.SightingCreate, db: Session):
   db.commit()
 
   return {"message": "Sighting created successfully"}
+
+def delete_sighting(user_id: int, sighting_id: int, db: Session):
+  user = db.query(User).filter(User.id == user_id).first()
+
+  if not user:
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+  
+  sighting = db.query(Sighting).filter(Sighting.id == sighting_id).first()
+
+  if not sighting:
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Could not find this sighting")
+  
+  db.delete(sighting)
+  db.commit()
+
+  return {"message": "The sighting has been permanently deleted."}
