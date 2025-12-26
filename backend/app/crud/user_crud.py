@@ -1,6 +1,6 @@
 from fastapi import HTTPException, status
 from app.models import Post, Sighting, User
-from app.schemas import user_schema
+from app.schemas import post_schema, user_schema
 from sqlalchemy.orm import Session
 
 def change_username(user_id: int, new_username: user_schema.UsernameUpdate, db: Session):
@@ -48,3 +48,37 @@ def get_received_sightings(user_id: int, db: Session):
   )
 
   return sightings
+
+def get_user_posts(user_id: int, db: Session):
+  user = db.query(User).filter(User.id == user_id).first()
+
+  if not user:
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+  
+  posts = db.query(Post).filter(Post.user_id == user_id).order_by(Post.time_created.desc()).all()
+
+  return posts
+
+def update_post(user_id: int, post_id: str, update_data: post_schema.PostUpdate, db: Session):
+  user = db.query(User).filter(User.id == user_id).first()
+
+  if not user:
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+  
+  post = db.query(Post).filter(Post.id == post_id).first()
+
+  if not post:
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found")
+  
+  if update_data.title:
+    post.title = update_data.title
+
+  if update_data.details:
+    post.details = update_data.details
+
+  if update_data.type:
+    post.type = update_data.type
+
+  db.commit()
+
+  return {"message": "Post has been updated"}

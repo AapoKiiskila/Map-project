@@ -14,10 +14,6 @@ def fetch_all_posts(db: Session = Depends(get_db)):
 def fetch_one_post(post_id: int, db: Session = Depends(get_db)):
   return post_crud.get_one_post(post_id, db)
 
-@router.get("/posts/user/{user_id}", response_model=list[post_schema.PostFetchMyPosts], status_code=status.HTTP_200_OK)
-def fetch_user_posts(user_id: int, db: Session = Depends(get_db)):
-  return post_crud.get_user_posts(user_id, db)
-
 @router.post("/posts/create-post", status_code=status.HTTP_201_CREATED)
 def create_new_post(new_post: post_schema.PostCreate, db: Session = Depends(get_db)):
   return post_crud.create_post(new_post, db)

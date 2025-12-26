@@ -26,6 +26,7 @@ export default function EditPostScreen() {
   const [errorMessage, setErrorMessage] = useState<string>("")
   const insets: EdgeInsets = useSafeAreaInsets()
   const router = useRouter()
+  const userId: number = 1  // Hardcoded for testing purposes
 
   const checkNewTitle = (): void => {
     if (!newTitle || newTitle.trim() === "") {
@@ -84,7 +85,7 @@ export default function EditPostScreen() {
     }
 
     try {
-      const response: Response = await fetch(`http://192.168.1.102:8000/posts/${postId}`, {
+      const response: Response = await fetch(`http://192.168.1.102:8000/users/${userId}/posts/${postId}`, {
         method: "PUT",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(payload)

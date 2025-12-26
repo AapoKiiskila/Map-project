@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status
 from app.database import get_db
 from app.crud import user_crud
-from app.schemas import user_schema
+from app.schemas import post_schema, user_schema
 from sqlalchemy.orm import Session
 
 router = APIRouter()
@@ -13,3 +13,11 @@ def change_new_username(user_id: int, new_username: user_schema.UsernameUpdate, 
 @router.get("/users/{user_id}/received-sightings", response_model=list[user_schema.UserReceivedSightings], status_code=status.HTTP_200_OK)
 def get_my_received_sightings(user_id: int, db: Session = Depends(get_db)):
   return user_crud.get_received_sightings(user_id, db)
+
+@router.get("/users/{user_id}/posts", response_model=list[post_schema.PostFetchMyPosts], status_code=status.HTTP_200_OK)
+def fetch_user_posts(user_id: int, db: Session = Depends(get_db)):
+  return user_crud.get_user_posts(user_id, db)
+
+@router.put("/users/{user_id}/posts/{post_id}", status_code=status.HTTP_200_OK)
+def update_one_post(user_id: int, post_id: int, update_data: post_schema.PostUpdate, db: Session = Depends(get_db)):
+  return user_crud.update_post(user_id, post_id, update_data, db)
