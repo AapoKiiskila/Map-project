@@ -40,9 +40,32 @@ def get_received_sightings(user_id: int, db: Session):
       Sighting.time_created,
       User.username,
     )
-    .filter(User.id == user_id)
     .join(Post, User.id == Post.user_id)
     .join(Sighting, Post.id == Sighting.post_id)
+    .filter(Post.user_id == user_id)
+    .order_by(Sighting.time_created.desc())
+    .all()
+  )
+
+  return sightings
+
+def get_created_sightings(user_id, db: Session):
+  user = db.query(User).filter(User.id == user_id).first()
+
+  if not user:
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+  
+  sightings = (
+    db.query(
+      Post.title,
+      Sighting.description,
+      Sighting.id,
+      Sighting.post_id,
+      Sighting.user_id,
+      Sighting.time_created,
+    )
+    .join(Post, Sighting.post_id == Post.id)
+    .filter(Sighting.user_id == user_id)
     .order_by(Sighting.time_created.desc())
     .all()
   )

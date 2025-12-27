@@ -14,6 +14,10 @@ def change_new_username(user_id: int, new_username: user_schema.UsernameUpdate, 
 def get_my_received_sightings(user_id: int, db: Session = Depends(get_db)):
   return user_crud.get_received_sightings(user_id, db)
 
+@router.get("/users/{user_id}/created-sightings", response_model=list[user_schema.UserCreatedSightings], status_code=status.HTTP_200_OK)
+def get_my_created_sightings(user_id: int, db: Session = Depends(get_db)):
+  return user_crud.get_created_sightings(user_id, db)
+
 @router.get("/users/{user_id}/posts", response_model=list[post_schema.PostFetchMyPosts], status_code=status.HTTP_200_OK)
 def fetch_user_posts(user_id: int, db: Session = Depends(get_db)):
   return user_crud.get_user_posts(user_id, db)

@@ -13,3 +13,11 @@ class UserReceivedSightings(BaseModel):
   user_id: int
   time_created: datetime
   username: str
+
+class UserCreatedSightings(BaseModel):
+  title: str
+  description: str
+  id: int
+  post_id: int
+  user_id: int
+  time_created: datetime
