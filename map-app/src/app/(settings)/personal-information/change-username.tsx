@@ -1,3 +1,4 @@
+import { config } from "../../../config"
 import { ErrorResponse } from "../../../types/ErrorResponse"
 import { CustomButton } from "../../../components/CustomButton"
 import { CustomTextInput } from "../../../components/CustomTextInput"
@@ -21,6 +22,7 @@ export default function ChangeUsernameScreen() {
   const insets: EdgeInsets = useSafeAreaInsets()
   const router = useRouter()
   const userId: number = 1  // Hardcoded for testing purposes
+  const URL = config.URL
 
   useEffect(() => {
     const showKeyboardListener = Keyboard.addListener("keyboardDidShow", () => {
@@ -64,7 +66,7 @@ export default function ChangeUsernameScreen() {
     }
     
     try {
-      const response: Response = await fetch(`http://192.168.1.102:8000/users/${userId}/update-username`, {
+      const response: Response = await fetch(`${URL}/users/${userId}/update-username`, {
         method: "PUT",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(payload)

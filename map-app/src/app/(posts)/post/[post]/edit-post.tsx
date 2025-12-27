@@ -1,3 +1,4 @@
+import { config } from "../../../../config"
 import { CustomButton } from "../../../../components/CustomButton"
 import { CustomTextInput } from "../../../../components/CustomTextInput"
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context"
@@ -27,6 +28,7 @@ export default function EditPostScreen() {
   const insets: EdgeInsets = useSafeAreaInsets()
   const router = useRouter()
   const userId: number = 1  // Hardcoded for testing purposes
+  const URL = config.URL
 
   const checkNewTitle = (): void => {
     if (!newTitle || newTitle.trim() === "") {
@@ -85,7 +87,7 @@ export default function EditPostScreen() {
     }
 
     try {
-      const response: Response = await fetch(`http://192.168.1.102:8000/users/${userId}/posts/${postId}`, {
+      const response: Response = await fetch(`${URL}/users/${userId}/posts/${postId}`, {
         method: "PUT",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(payload)

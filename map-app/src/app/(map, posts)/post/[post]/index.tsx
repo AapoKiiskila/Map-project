@@ -1,3 +1,4 @@
+import { config } from "../../../../config"
 import { CustomButton } from "../../../../components/CustomButton"
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context"
 import { ErrorResponse } from "../../../../types/ErrorResponse"
@@ -19,6 +20,7 @@ export default function PostScreen() {
   const insets: EdgeInsets = useSafeAreaInsets()
   const router = useRouter()
   const userId: number = 1  // Hardcoded for testing purposes
+  const URL = config.URL
 
   useFocusEffect(
     useCallback(() => {
@@ -29,7 +31,7 @@ export default function PostScreen() {
   
   const fetchPost = async (): Promise<void> => {
     try {
-      const response: Response = await fetch(`http://192.168.1.102:8000/posts/${postId}`, {
+      const response: Response = await fetch(`${URL}/posts/${postId}`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
       })

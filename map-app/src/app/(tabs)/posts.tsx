@@ -1,3 +1,4 @@
+import { config } from "../../config"
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native"
 import { ErrorResponse } from "../../types/ErrorResponse"
 import { Ionicons } from "@expo/vector-icons"
@@ -14,6 +15,7 @@ export default function PostsScreen() {
   const [isPressed, setIsPressed] = useState<boolean>(false)
   const userId: number = 1  // Hardcoded for testing purposes
   const router = useRouter()
+  const URL = config.URL
 
   useFocusEffect(
     useCallback(() => {
@@ -24,7 +26,7 @@ export default function PostsScreen() {
 
   const fetchMyPosts = async (): Promise<void> => {
     try {
-      const response: Response = await fetch(`http://192.168.1.102:8000/users/${userId}/posts`, {
+      const response: Response = await fetch(`${URL}/users/${userId}/posts`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
       })

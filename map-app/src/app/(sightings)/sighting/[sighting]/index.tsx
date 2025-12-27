@@ -1,3 +1,4 @@
+import { config } from "../../../../config"
 import { CustomButton } from "../../../../components/CustomButton"
 import { ConfirmAlert } from "../../../../components/ConfirmAlert"
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context"
@@ -24,6 +25,7 @@ export default function SightingScreen() {
   const navigation = useNavigation()
   const insets: EdgeInsets = useSafeAreaInsets()
   const router = useRouter()
+  const URL = config.URL
 
   useEffect(() => {
     navigation.setOptions({
@@ -46,7 +48,7 @@ export default function SightingScreen() {
     setIsLoading(true)
 
     try {
-      const response: Response = await fetch(`http://192.168.1.102:8000/users/${userId}/sightings/${sightingId}`, {
+      const response: Response = await fetch(`${URL}/users/${userId}/sightings/${sightingId}`, {
         method: "DELETE",
         headers: {"Content-Type": "application/json"},
       })

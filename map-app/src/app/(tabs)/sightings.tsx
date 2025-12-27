@@ -1,3 +1,4 @@
+import { config } from "../../config"
 import { CreatedSightingsData } from "../../types/CreatedSightingsData"
 import { ErrorResponse } from "../../types/ErrorResponse"
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native"
@@ -20,6 +21,7 @@ export default function SightingsScreen() {
   const navigation = useNavigation()
   const router = useRouter()
   const userId: number = 1  // Hardcoded for testing purposes
+  const URL = config.URL
 
   useEffect(() => {
     navigation.setOptions({
@@ -42,7 +44,7 @@ export default function SightingsScreen() {
 
   const fetchReceivedSightings = async (): Promise<void> => {
     try {
-      const response: Response = await fetch(`http://192.168.1.102:8000/users/${userId}/received-sightings`, {
+      const response: Response = await fetch(`${URL}/users/${userId}/received-sightings`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
       })
@@ -62,7 +64,7 @@ export default function SightingsScreen() {
 
   const fetchCreatedSightings = async (): Promise<void> => {
     try {
-      const response: Response = await fetch(`http://192.168.0.107:8000/users/${userId}/created-sightings`, {
+      const response: Response = await fetch(`${URL}/users/${userId}/created-sightings`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
       })

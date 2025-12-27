@@ -1,3 +1,4 @@
+import { config } from "../../config"
 import { ErrorResponse } from "../../types/ErrorResponse"
 import { CustomButton } from "../../components/CustomButton"
 import { CustomTextInput } from "../../components/CustomTextInput"
@@ -28,6 +29,7 @@ export default function CreatePostScreen() {
   const lat = Number(latitude)
   const lon = Number(longitude)
   const userId: number = 1  // Hardcoded for testing purposes
+  const URL = config.URL
   
   const checkTitle = (): void => {
     if (!title || title.trim() === "") {
@@ -89,7 +91,7 @@ export default function CreatePostScreen() {
     }
 
     try {
-      const response: Response = await fetch("http://192.168.1.102:8000/posts/create-post", {
+      const response: Response = await fetch(`${URL}/posts/create-post`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(payload)
