@@ -1,26 +1,49 @@
 import { config } from "../../../../config"
+import { ConfirmAlert } from "../../../../components/ConfirmAlert"
 import { CustomButton } from "../../../../components/CustomButton"
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context"
 import { ErrorResponse } from "../../../../types/ErrorResponse"
+import Ionicons from "@expo/vector-icons/Ionicons"
 import { LoadingModal } from "../../../../components/LoadingModal"
 import { LocalDateAndTime } from "../../../../components/LocalDateAndTime"
 import { PostScreenData } from "../../../../types/PostScreenData"
-import React, { useCallback, useState} from "react"
-import { ScrollView, StyleSheet, Text, View } from "react-native"
+import React, { useCallback, useEffect, useState} from "react"
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native"
 import { useFocusEffect } from "@react-navigation/native"
 import { useLocalSearchParams } from "expo-router"
+import { useNavigation } from "@react-navigation/native"
 import { useRouter } from "expo-router"
+import { SuccessResponse } from "../../../../types/SuccessResponse"
 
 export default function PostScreen() {
   const [postDetails, setPostDetails] = useState<PostScreenData | null>(null)
   const [errorMessage, setErrorMessage] = useState<string>("")
+  const [showConfirmAlert, setShowConfirmAlert] = useState<boolean>(false)
+  const [deleteMessage, setDeleteMessage] = useState<string>("")
+  const [deleteError, setDeleteError] = useState<string>("")
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [showModal, setShowModal] = useState<boolean>(false)
   const [isPressed, setIsPressed] = useState<boolean>(false)
   const {post, type} = useLocalSearchParams<{post: string, type: string}>()
   const postId = Number(post)
   const insets: EdgeInsets = useSafeAreaInsets()
   const router = useRouter()
+  const navigation = useNavigation()
   const userId: number = 1  // Hardcoded for testing purposes
   const URL = config.URL
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: 
+        userId === postDetails?.user_id ?
+          () => (
+            <Pressable style={{ marginRight: 15 }} onPress={() => setShowConfirmAlert(true)}>
+              <Ionicons name="close-outline" size={24} color="rgba(0, 0, 0, 1)" />
+            </Pressable>
+          )
+        : null
+    })
+  }, [navigation, postDetails])
 
   useFocusEffect(
     useCallback(() => {
@@ -51,6 +74,7 @@ export default function PostScreen() {
 
   const showErrorAndGoBack = (): void => {
     setErrorMessage("")
+    setDeleteError("")
     router.back()
   }
 
@@ -70,6 +94,33 @@ export default function PostScreen() {
       router.push({
         pathname: `post/${postId}/new-sighting`,
       })
+    }
+  }
+
+  const deletePost = async (): Promise<void> => {
+    setShowConfirmAlert(false)
+    setShowModal(true)
+    setIsLoading(true)
+
+    try {
+      const response: Response = await fetch(`${URL}/users/${userId}/posts/${postId}`, {
+        method: "DELETE",
+        headers: {"Content-Type": "application/json"},
+      })
+      
+      if (response.ok) {
+        const data: SuccessResponse = await response.json()
+        setDeleteMessage(data.message)
+      } else {
+        const errorData: ErrorResponse = await response.json()
+        setDeleteError(errorData.detail)
+      }
+    }
+    catch (error) {
+      setDeleteError("Something went wrong. Please try again later.")
+    }
+    finally {
+      setIsLoading(false)
     }
   }
 
@@ -108,6 +159,21 @@ export default function PostScreen() {
           </View>
         </>
       }
+
+      <ConfirmAlert 
+        confirmMessage="Are you sure you want to delete this post? This action cannot be undone."
+        isVisible={showConfirmAlert}
+        onCancelPress={() => setShowConfirmAlert(false)}
+        onPress={() => deletePost()}
+      />
+
+      <LoadingModal
+        alertMessage={deleteMessage}
+        errorMessage={deleteError} 
+        isLoading={isLoading} 
+        isVisible={showModal}
+        onPress={() => router.back()}
+      />
     
       {errorMessage &&
         <LoadingModal 

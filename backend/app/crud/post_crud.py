@@ -48,3 +48,18 @@ def create_post(new_post: post_schema.PostCreate, db: Session):
 
   return {"message": "Post created successfully"}
 
+def delete_post(user_id: int, post_id: int, db: Session):
+  user = db.query(User).filter(User.id == user_id).first()
+
+  if not user:
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+  
+  post = db.query(Post).filter(Post.id == post_id).first()
+
+  if not post:
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found")
+  
+  db.delete(post)
+  db.commit()
+
+  return {"message": "The post has been permanently deleted"}
