@@ -1,3 +1,4 @@
+import { config } from "../../config"
 import { LoadingModal } from "../../components/LoadingModal"
 import MapView, { LatLng, LongPressEvent, Marker }  from "react-native-maps"
 import { Modal, Pressable, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native"
@@ -16,6 +17,7 @@ export default function MapScreen() {
   const [fetching, setFetching] = useState<boolean>(false)
   const router = useRouter()
   const userId: number = 1  // Hardcoded for testing purposes
+  const URL = config.URL
 
   useFocusEffect(
     useCallback(() => {
@@ -27,7 +29,7 @@ export default function MapScreen() {
     setFetching(true)
 
     try {
-      const response: Response = await fetch("http://192.168.1.102:8000/posts", {
+      const response: Response = await fetch(`${URL}/posts`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
       })
