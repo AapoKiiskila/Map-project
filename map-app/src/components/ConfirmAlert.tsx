@@ -9,7 +9,7 @@ type Props = {
   onPress: () => void
 }
 
-export function ConfirmAlert({ confirmMessage, isVisible, onCancelPress, onPress }: Props) {
+export function ConfirmAlert({confirmMessage, isVisible, onCancelPress, onPress}: Props) {
 
   return(
     <Modal
@@ -49,19 +49,19 @@ export function ConfirmAlert({ confirmMessage, isVisible, onCancelPress, onPress
 
 const styles = StyleSheet.create({
   modalContainer: {
-    flex: 1,
-    justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.2)",
+    flex: 1,
+    justifyContent: "center",
   },
   alertContainer: {
     alignItems: "center",
-    justifyContent: "center",
-    gap: 10,
-    width: "75%",
     backgroundColor: "rgba(255, 255, 255, 1)",
     borderRadius: 4,
+    gap: 10,
+    justifyContent: "center",
     paddingVertical: 12,
+    width: "75%",
   },
   text: {
     fontSize: 16,
@@ -70,17 +70,17 @@ const styles = StyleSheet.create({
     width: "90%",
   },
   buttonContainer: {
-    width: "100%",
     alignItems: "center",
-    gap: 5
+    gap: 5,
+    width: "100%",
   },
   confirmButton: {
+    alignItems: "center",
     backgroundColor: "rgb(186, 26, 26)",
     borderRadius: 4,
-    width: "90%",
-    alignItems: "center",
     justifyContent: "center",
     paddingVertical: 12,
+    width: "90%",
   },
   buttonPressed: {
     opacity: 0.8,
@@ -91,11 +91,11 @@ const styles = StyleSheet.create({
     fontWeight: 500,
   },
   cancelButton: {
+    alignItems: "center",
     backgroundColor: "rgba(175, 175, 175, 1)",
     borderRadius: 4,
-    width: "90%",
-    alignItems: "center",
     justifyContent: "center",
     paddingVertical: 12,
+    width: "90%",
   },
 })

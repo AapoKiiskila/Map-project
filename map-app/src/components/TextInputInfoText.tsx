@@ -9,7 +9,7 @@ type Props = {
   word: string
 }
 
-export function TextInputInfoText({ error, errorMessage, style, textLimit, word}: Props) {
+export function TextInputInfoText({error, errorMessage, style, textLimit, word}: Props) {
   return(
     <View style={[styles.container, style]}>
       {error ? <Text style={styles.leftText}>{errorMessage}</Text> : <Text style={styles.leftText}></Text>}

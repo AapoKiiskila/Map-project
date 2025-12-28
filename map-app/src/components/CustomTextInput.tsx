@@ -11,12 +11,12 @@ type Props = {
   onBlur?: () => void
   onChangeText: (text: string) => void
   placeholder?: string
-  textType?: "email" | "password"
   style?: object
+  textType?: "email" | "password"
   value: string
 }
 
-export function CustomTextInput({ error, label, leftIcon, maxLength, multiline, onBlur, onChangeText, placeholder, style, textType, value }: Props) {
+export function CustomTextInput({error, label, leftIcon, maxLength, multiline, onBlur, onChangeText, placeholder, style, textType, value}: Props) {
   const [focused, setFocused] = useState<boolean>(false)
 
   return(
@@ -64,43 +64,43 @@ const styles = StyleSheet.create({
     color: "rgb(186, 26, 26)",
   },
   container: {
-    flexDirection: "row",
     backgroundColor: "rgba(255, 255, 255, 1)",
     borderRadius: 4,
     elevation: 3,
+    flexDirection: "row",
     shadowColor: "rgba(0, 0, 0, 1)(255, 255, 255, 1)",
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
-    shadowOffset: { width: 0, height: 1 },
   },
   containerFocused: {
-    position: "absolute",
-    top: -1,
+    borderColor: "rgba(0, 0, 0, 1)",
+    borderRadius: 4,
+    borderWidth: 1,
     bottom: -1,
     left: -1,
+    position: "absolute",
     right: -1,
-    borderColor: "rgba(0, 0, 0, 1)",
-    borderWidth: 1,
-    borderRadius: 4,
+    top: -1,
   },
   error: {
-    position: "absolute",
-    top: -1,
+    borderColor: "rgb(186, 26, 26)",
+    borderRadius: 4,
+    borderWidth: 1,
     bottom: -1,
     left: -1,
+    position: "absolute",
     right: -1,
-    borderColor: "rgb(186, 26, 26)",
-    borderWidth: 1,
-    borderRadius: 4,
+    top: -1,
   },
   leftIcon: {
-    marginLeft: 10,
     alignSelf: "center",
+    marginLeft: 10,
   },
   input: {
     flex: 1,
-    height: 40,
     fontSize: 16,
+    height: 40,
     padding: 10,
     textAlignVertical: "top",
   },

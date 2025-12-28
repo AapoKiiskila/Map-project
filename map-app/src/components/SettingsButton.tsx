@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons"
-import React from "react"
 import { Pressable, StyleSheet, Text, View } from "react-native"
+import React from "react"
 
 type Props = {
   extraText?: string
@@ -9,7 +9,7 @@ type Props = {
   onPress: () => void
 }
 
-export function SettingsButton({ extraText, signOut, text, onPress }: Props) {
+export function SettingsButton({extraText, signOut, text, onPress}: Props) {
   return(
     <Pressable
       onPress={onPress}
@@ -32,12 +32,12 @@ export function SettingsButton({ extraText, signOut, text, onPress }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    height: 60,
-    flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
     borderBottomColor: "rgba(0, 0, 0, 1)",
     borderBottomWidth: 0.3,
+    flexDirection: "row",
+    height: 60,
+    justifyContent: "space-between",
   },
   pressablePressed: {
     opacity: 0.2,
