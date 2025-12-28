@@ -7,27 +7,34 @@ import { LoadingModal } from "../../components/LoadingModal"
 import { LocalDateAndTime } from "../../components/LocalDateAndTime"
 import React, { useCallback, useEffect, useState} from "react"
 import { ReceivedSightingsData } from "../../types/ReceivedSightingsData"
-import { useFocusEffect } from "@react-navigation/native"
-import { useNavigation } from "@react-navigation/native"
+import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import { useRouter } from "expo-router"
 
 export default function SightingsScreen() {
+  const navigation = useNavigation()
+  const router = useRouter()
+
+  const URL = config.URL
+  const userId: number = 1  // Hardcoded for testing purposes
+
   const [receivedSightings, setReceivedSightings] = useState<ReceivedSightingsData[] | null>(null)
   const [receivedSightingsError, setReceivedSightingsError] = useState<string>("")
   const [createdSightings, setCreatedSightings] = useState<CreatedSightingsData[] | null>(null)
   const [createdSightingsError, setCreatedSightingsError] = useState<string>("")
   const [showReceived, setShowReceived] = useState<boolean>(true)
   const [isPressed, setIsPressed] = useState<boolean>(false)
-  const navigation = useNavigation()
-  const router = useRouter()
-  const userId: number = 1  // Hardcoded for testing purposes
-  const URL = config.URL
 
   useEffect(() => {
     navigation.setOptions({
       headerTitle: showReceived === true ? "Received" : "Sent",
       headerRight: () => (
-        <Pressable style={{ marginRight: 15 }} onPress={() => setShowReceived(!showReceived)}>
+        <Pressable
+          onPress={() => setShowReceived(!showReceived)}
+          style={({pressed}) => [
+            styles.icon,
+            pressed && styles.iconPressed
+          ]} 
+        >
           <Ionicons name="repeat-outline" size={24} color="rgba(0, 0, 0, 1)" />
         </Pressable>
       )
@@ -125,7 +132,17 @@ export default function SightingsScreen() {
               <Pressable
                 disabled={isPressed}
                 key={item.id}
-                onPress={() => navigateToReceivedSighting(item.id, item.description, item.type, item.post_id, item.user_id, item.time_created, item.username)}
+                onPress={() => 
+                  navigateToReceivedSighting(
+                    item.id, 
+                    item.description, 
+                    item.type, 
+                    item.post_id, 
+                    item.user_id, 
+                    item.time_created, 
+                    item.username
+                  )
+                }
                 style={({pressed}) => [
                   styles.receivedSightingContainer,
                   pressed && styles.pressablePressed,
@@ -201,9 +218,15 @@ export default function SightingsScreen() {
 }
 
 const styles = StyleSheet.create({
+  icon: {
+    marginRight: 10,
+  },
+  iconPressed: {
+    opacity: 0.2,
+  },
   mainContainer: {
-    flex: 1,
     backgroundColor: "rgba(255, 255, 255, 1)",
+    flex: 1,
   },
   container: {
     alignItems: "center",
@@ -211,18 +234,18 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   receivedSightingContainer: {
-    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    height: 80,
-    width: "95%",
     backgroundColor: "rgba(255, 255, 255, 1)",
-    paddingHorizontal: 10,
     elevation: 3,
+    flexDirection: "row",
+    height: 80,
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
     shadowColor: "rgba(0, 0, 0, 1)(255, 255, 255, 1)",
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
-    shadowOffset: { width: 0, height: 1 },
+    width: "95%",
   },
   pressablePressed: {
     opacity: 0.2,
@@ -241,17 +264,17 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   createdSightingContainer: {
-    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    height: 60,
-    width: "95%",
     backgroundColor: "rgba(255, 255, 255, 1)",
-    paddingHorizontal: 10,
     elevation: 3,
+    flexDirection: "row",
+    height: 60,
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
     shadowColor: "rgba(0, 0, 0, 1)(255, 255, 255, 1)",
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
-    shadowOffset: { width: 0, height: 1 },
+    width: "95%",
   },
 })

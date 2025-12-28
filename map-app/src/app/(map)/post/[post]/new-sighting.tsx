@@ -134,7 +134,7 @@ export default function NewSightingScreen() {
         errorMessage={errorMessage}
         isLoading={isLoading} 
         isVisible={isSubmitted}
-        onPress={() => router.replace("/map")}
+        onPress={() => router.back()}
       />
     </KeyboardAvoidingView>
   )
