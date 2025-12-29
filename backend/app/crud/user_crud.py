@@ -3,7 +3,7 @@ from app.models import Post, Sighting, User
 from app.schemas import post_schema, user_schema
 from sqlalchemy.orm import Session
 
-def change_username(user_id: int, new_username: user_schema.UsernameUpdate, db: Session):
+def change_username(user_id: int, new_username: user_schema.UserUpdateUsername, db: Session):
   user = db.query(User).filter(User.id == user_id).first()
 
   if not user:

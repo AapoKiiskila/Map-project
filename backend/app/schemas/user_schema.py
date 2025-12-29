@@ -1,7 +1,7 @@
 from datetime import datetime
 from pydantic import BaseModel
 
-class UsernameUpdate(BaseModel):
+class UserUpdateUsername(BaseModel):
   username: str
 
 class UserReceivedSightings(BaseModel):
