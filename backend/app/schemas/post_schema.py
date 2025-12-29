@@ -2,14 +2,14 @@ from datetime import datetime
 from decimal import Decimal
 from pydantic import BaseModel
 
-class PostFetchResponse(BaseModel):
+class PostFetchAllPosts(BaseModel):
   id: int
   user_id: int
   type: str
   latitude: Decimal
   longitude: Decimal
 
-class PostDataResponse(BaseModel):
+class PostFetchOnePost(BaseModel):
   title: str
   details: str
   time_created: datetime
@@ -24,7 +24,7 @@ class PostCreate(BaseModel):
   longitude: Decimal
   user_id: int
 
-class PostFetchMyPosts(BaseModel):
+class PostFetchUserPosts(BaseModel):
   id: int
   title: str
   type: str
