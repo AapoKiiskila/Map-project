@@ -11,9 +11,19 @@ import { SuccessResponse } from "../../types/SuccessResponse"
 import { TextInputInfoText } from "../../components/TextInputInfoText"
 import { useLocalSearchParams } from "expo-router"
 import { useRouter } from "expo-router"
-import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 export default function CreatePostScreen() {
+  const {latitude, longitude} = useLocalSearchParams<{latitude: string, longitude: string}>()
+  const lat = Number(latitude)
+  const lon = Number(longitude)
+
+  const insets = useSafeAreaInsets()
+  const router = useRouter()
+
+  const URL = config.URL
+  const userId: number = 1  // Hardcoded for testing purposes
+
   const [title, setTitle] = useState<string>("")
   const [titleError, setTitleError] = useState<boolean>(false)
   const [details, setDetails] = useState<string>("")
@@ -23,13 +33,6 @@ export default function CreatePostScreen() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [alertMessage, setAlertMessage] = useState<string>("")
   const [errorMessage, setErrorMessage] = useState<string>("")
-  const insets: EdgeInsets = useSafeAreaInsets()
-  const router = useRouter()
-  const {latitude, longitude} = useLocalSearchParams<{latitude: string, longitude: string}>()
-  const lat = Number(latitude)
-  const lon = Number(longitude)
-  const userId: number = 1  // Hardcoded for testing purposes
-  const URL = config.URL
   
   const checkTitle = (): void => {
     if (!title || title.trim() === "") {
@@ -91,7 +94,7 @@ export default function CreatePostScreen() {
     }
 
     try {
-      const response: Response = await fetch(`${URL}/posts/create-post`, {
+      const response = await fetch(`${URL}/posts/create-post`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(payload)
@@ -215,10 +218,10 @@ export default function CreatePostScreen() {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    flex: 1,
     alignItems: "center",
-    justifyContent: "space-between",
     backgroundColor: "rgba(255, 255, 255, 1)",
+    flex: 1,
+    justifyContent: "space-between",
   },
   upperContent: {
     width: "95%",

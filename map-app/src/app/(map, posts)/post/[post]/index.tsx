@@ -1,7 +1,7 @@
 import { config } from "../../../../config"
 import { ConfirmAlert } from "../../../../components/ConfirmAlert"
 import { CustomButton } from "../../../../components/CustomButton"
-import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { ErrorResponse } from "../../../../types/ErrorResponse"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import { LoadingModal } from "../../../../components/LoadingModal"
@@ -16,6 +16,16 @@ import { useRouter } from "expo-router"
 import { SuccessResponse } from "../../../../types/SuccessResponse"
 
 export default function PostScreen() {
+  const {post, type} = useLocalSearchParams<{post: string, type: string}>()
+  const postId = Number(post)
+
+  const insets = useSafeAreaInsets()
+  const navigation = useNavigation()
+  const router = useRouter()
+
+  const URL = config.URL
+  const userId: number = 1  // Hardcoded for testing purposes
+
   const [postDetails, setPostDetails] = useState<PostScreenData | null>(null)
   const [errorMessage, setErrorMessage] = useState<string>("")
   const [showConfirmAlert, setShowConfirmAlert] = useState<boolean>(false)
@@ -24,20 +34,19 @@ export default function PostScreen() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [showModal, setShowModal] = useState<boolean>(false)
   const [isPressed, setIsPressed] = useState<boolean>(false)
-  const {post, type} = useLocalSearchParams<{post: string, type: string}>()
-  const postId = Number(post)
-  const insets: EdgeInsets = useSafeAreaInsets()
-  const router = useRouter()
-  const navigation = useNavigation()
-  const userId: number = 1  // Hardcoded for testing purposes
-  const URL = config.URL
 
   useEffect(() => {
     navigation.setOptions({
       headerRight: 
         userId === postDetails?.user_id ?
           () => (
-            <Pressable style={{ marginRight: 15 }} onPress={() => setShowConfirmAlert(true)}>
+            <Pressable 
+              onPress={() => setShowConfirmAlert(true)} 
+              style={({pressed}) => [
+                styles.icon,
+                pressed && styles.iconPressed
+              ]}
+            >
               <Ionicons name="close-outline" size={24} color="rgba(0, 0, 0, 1)" />
             </Pressable>
           )
@@ -54,7 +63,7 @@ export default function PostScreen() {
   
   const fetchPost = async (): Promise<void> => {
     try {
-      const response: Response = await fetch(`${URL}/posts/${postId}`, {
+      const response = await fetch(`${URL}/posts/${postId}`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
       })
@@ -103,7 +112,7 @@ export default function PostScreen() {
     setIsLoading(true)
 
     try {
-      const response: Response = await fetch(`${URL}/users/${userId}/posts/${postId}`, {
+      const response = await fetch(`${URL}/users/${userId}/posts/${postId}`, {
         method: "DELETE",
         headers: {"Content-Type": "application/json"},
       })
@@ -188,42 +197,48 @@ export default function PostScreen() {
 }
 
 const styles = StyleSheet.create({
+  icon: {
+    marginRight: 10,
+  },
+  iconPressed: {
+    opacity: 0.2,
+  },
   mainContainer: {
-    flex: 1,
-    backgroundColor: "rgba(255, 255, 255, 1)",
-    justifyContent: "space-between",
     alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 1)",
+    flex: 1,
+    justifyContent: "space-between",
   },
   upperContent: {
     width: "95%",
   },
   scrollViewContainer: {
     backgroundColor: "rgba(255, 255, 255, 1)",
-    maxHeight: 600,
-    marginTop: 20,
-    padding: 10,
     borderRadius: 4,
     elevation: 3,
+    marginTop: 20,
+    maxHeight: 600,
+    padding: 10,
     shadowColor: "rgba(0, 0, 0, 1)(255, 255, 255, 1)",
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
-    shadowOffset: { width: 0, height: 1 },
   },
   titleText: {
+    alignSelf: "center",
     fontSize: 20,
     fontWeight: 500,
-    alignSelf: "center",
   },
   detailsText: {
-    fontSize: 16,
-    marginTop: 10,
     lineHeight: 24,
+    marginTop: 10,
+    fontSize: 16,
   },
   dateTimeTextContainer: {
     alignItems: "flex-end",
+    gap: 5,
     marginRight: 5,
     marginTop: 5,
-    gap: 5,
   },
   buttonContainer: {
     width: "95%",  

@@ -1,7 +1,7 @@
+import React from "react"
 import { SettingsButton } from "../../../components/SettingsButton"
 import { StyleSheet, View } from "react-native"
 import { useRouter } from "expo-router"
-import React from "react"
 
 export default function PersonalInformationScreen() {
   const router = useRouter()
@@ -19,9 +19,9 @@ export default function PersonalInformationScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: "center",
     backgroundColor: "rgba(255, 255, 255, 1)",
+    flex: 1,
   },
   contentContainer: {
     width: "90%",

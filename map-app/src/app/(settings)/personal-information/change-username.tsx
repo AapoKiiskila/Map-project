@@ -2,7 +2,7 @@ import { config } from "../../../config"
 import { ErrorResponse } from "../../../types/ErrorResponse"
 import { CustomButton } from "../../../components/CustomButton"
 import { CustomTextInput } from "../../../components/CustomTextInput"
-import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Keyboard, KeyboardAvoidingView, Platform, Pressable, StyleSheet, View } from "react-native"
 import { LoadingModal } from "../../../components/LoadingModal"
 import React, { useState, useEffect } from "react"
@@ -12,6 +12,12 @@ import { UpdateUsernamePayload } from "../../../types/UpdateUsernamePayload"
 import { useRouter } from "expo-router"
 
 export default function ChangeUsernameScreen() {
+  const insets = useSafeAreaInsets()
+  const router = useRouter()
+
+  const URL = config.URL
+  const userId: number = 1  // Hardcoded for testing purposes
+
   const [newUsername, setNewUsername] = useState<string>("")
   const [newUsernameError, setNewUsernameError] = useState<boolean>(false)
   const [behaviour, setBehaviour] = useState<"height" | undefined>("height")
@@ -19,10 +25,6 @@ export default function ChangeUsernameScreen() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [alertMessage, setAlertMessage] = useState<string>("")
   const [errorMessage, setErrorMessage] = useState<string>("")
-  const insets: EdgeInsets = useSafeAreaInsets()
-  const router = useRouter()
-  const userId: number = 1  // Hardcoded for testing purposes
-  const URL = config.URL
 
   useEffect(() => {
     const showKeyboardListener = Keyboard.addListener("keyboardDidShow", () => {
@@ -66,7 +68,7 @@ export default function ChangeUsernameScreen() {
     }
     
     try {
-      const response: Response = await fetch(`${URL}/users/${userId}/update-username`, {
+      const response = await fetch(`${URL}/users/${userId}/update-username`, {
         method: "PUT",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(payload)
@@ -136,18 +138,18 @@ export default function ChangeUsernameScreen() {
 
 const styles = StyleSheet.create({
   keyboardAvoidingView: {
-    flex: 1,
     backgroundColor: "rgba(255, 255, 255, 1)",
+    flex: 1,
   },
   container: {
-    flex: 1,
-    backgroundColor: "rgba(255, 255, 255, 1)",
     alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 1)",
+    flex: 1,
     justifyContent: "space-between",
   },
   upperContent: {
-    width: "95%",
     marginTop: 10,
+    width: "95%",
   },
   lowerContent: {
     width: "95%",

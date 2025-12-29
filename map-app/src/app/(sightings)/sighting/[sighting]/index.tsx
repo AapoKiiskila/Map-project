@@ -1,7 +1,7 @@
 import { config } from "../../../../config"
 import { CustomButton } from "../../../../components/CustomButton"
 import { ConfirmAlert } from "../../../../components/ConfirmAlert"
-import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { ErrorResponse } from "../../../../types/ErrorResponse"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import { LoadingModal } from "../../../../components/LoadingModal"
@@ -13,19 +13,22 @@ import { useNavigation } from "@react-navigation/native"
 import { useLocalSearchParams, useRouter } from "expo-router"
 
 export default function SightingScreen() {
+  const {sighting, description, type, postId, sightingUserId, time, username} = useLocalSearchParams<{sighting: string, description: string, type: string, postId: string, sightingUserId: string, time: string, username: string}>()
+  const sightingId = Number(sighting)
+  const userIdNumber = Number(sightingUserId)
+
+  const insets = useSafeAreaInsets()
+  const navigation = useNavigation()
+  const router = useRouter()
+
+  const URL = config.URL
+  const userId: number = 2 // Hardcoded for testing purposes
+
   const [alertMessage, setAlertMessage] = useState<string>("")
   const [errorMessage, setErrorMessage] = useState<string>("")
   const [showConfirmAlert, setShowConfirmAlert] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [showModal, setShowModal] = useState<boolean>(false)
-  const {sighting, description, type, postId, sightingUserId, time, username} = useLocalSearchParams<{sighting: string, description: string, type: string, postId: string, sightingUserId: string, time: string, username: string}>()
-  const sightingId = Number(sighting)
-  const userIdNumber = Number(sightingUserId)
-  const userId: number = 2 // Hardcoded for testing purposes
-  const navigation = useNavigation()
-  const insets: EdgeInsets = useSafeAreaInsets()
-  const router = useRouter()
-  const URL = config.URL
 
   useEffect(() => {
     navigation.setOptions({
@@ -34,7 +37,13 @@ export default function SightingScreen() {
       headerRight: 
         userId === userIdNumber ?
           () => (
-            <Pressable style={{ marginRight: 15 }} onPress={() => setShowConfirmAlert(true)}>
+            <Pressable 
+              onPress={() => setShowConfirmAlert(true)} 
+              style={({pressed}) => [
+                styles.icon,
+                pressed && styles.iconPressed
+              ]}
+            >
               <Ionicons name="close-outline" size={24} color="rgba(0, 0, 0, 1)" />
             </Pressable>
           )
@@ -48,7 +57,7 @@ export default function SightingScreen() {
     setIsLoading(true)
 
     try {
-      const response: Response = await fetch(`${URL}/users/${userId}/sightings/${sightingId}`, {
+      const response = await fetch(`${URL}/users/${userId}/sightings/${sightingId}`, {
         method: "DELETE",
         headers: {"Content-Type": "application/json"},
       })
@@ -123,26 +132,32 @@ export default function SightingScreen() {
 }
 
 const styles = StyleSheet.create({
+  icon: {
+    marginRight: 10,
+  },
+  iconPressed: {
+    opacity: 0.2,
+  },
   mainContainer: {
-    flex: 1,
-    backgroundColor: "rgba(255, 255, 255, 1)",
-    justifyContent: "space-between",
     alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 1)",
+    flex: 1,
+    justifyContent: "space-between",
   },
   upperContent: {
     width: "95%",
   },
   scrollViewContainer: {
     backgroundColor: "rgba(255, 255, 255, 1)",
-    maxHeight: 600,
-    marginTop: 20,
-    padding: 10,
     borderRadius: 4,
     elevation: 3,
+    marginTop: 20,
+    maxHeight: 600,
+    padding: 10,
     shadowColor: "rgba(0, 0, 0, 1)(255, 255, 255, 1)",
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
-    shadowOffset: { width: 0, height: 1 },
   },
   descriptionText: {
     fontSize: 16,

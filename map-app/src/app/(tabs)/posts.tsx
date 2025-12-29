@@ -10,13 +10,15 @@ import { useFocusEffect } from "@react-navigation/native"
 import { useRouter } from "expo-router"
 
 export default function PostsScreen() {
+  const router = useRouter()
+
+  const URL = config.URL
+  const userId: number = 1  // Hardcoded for testing purposes
+
   const [posts, setPosts] = useState<MyPost[] | null>(null)
   const [errorMessage, setErrorMessage] = useState<string>("")
   const [isPressed, setIsPressed] = useState<boolean>(false)
-  const userId: number = 1  // Hardcoded for testing purposes
-  const router = useRouter()
-  const URL = config.URL
-
+  
   useFocusEffect(
     useCallback(() => {
       fetchMyPosts()
@@ -26,7 +28,7 @@ export default function PostsScreen() {
 
   const fetchMyPosts = async (): Promise<void> => {
     try {
-      const response: Response = await fetch(`${URL}/users/${userId}/posts`, {
+      const response = await fetch(`${URL}/users/${userId}/posts`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
       })
@@ -96,8 +98,8 @@ export default function PostsScreen() {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    flex: 1,
     backgroundColor: "rgba(255, 255, 255, 1)",
+    flex: 1,
   },
   container: {
     alignItems: "center",
@@ -105,18 +107,18 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   postContainer: {
-    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    height: 60,
-    width: "95%",
     backgroundColor: "rgba(255, 255, 255, 1)",
-    paddingHorizontal: 10,
     elevation: 3,
+    flexDirection: "row",
+    height: 60,
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
     shadowColor: "rgba(0, 0, 0, 1)(255, 255, 255, 1)",
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
-    shadowOffset: { width: 0, height: 1 },
+    width: "95%",
   },
   pressablePressed: {
     opacity: 0.2,

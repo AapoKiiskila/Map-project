@@ -8,6 +8,11 @@ import { useFocusEffect } from "@react-navigation/native"
 import { useRouter } from "expo-router"
 
 export default function MapScreen() {
+  const router = useRouter()
+
+  const URL = config.URL
+  const userId: number = 1  // Hardcoded for testing purposesv
+
   const [userMarker, setUserMarker] = useState<LatLng | null>(null)
   const [markers, setMarkers] = useState<PostMarker[] | null>(null)
   const [limitError, setLimitError] = useState<boolean>(false)
@@ -15,9 +20,6 @@ export default function MapScreen() {
   const [showFetchError, setShowFetchError] = useState<boolean>(false)
   const [modalVisible, setModalVisible] = useState<boolean>(false)
   const [fetching, setFetching] = useState<boolean>(false)
-  const router = useRouter()
-  const userId: number = 1  // Hardcoded for testing purposes
-  const URL = config.URL
 
   useFocusEffect(
     useCallback(() => {
@@ -29,7 +31,7 @@ export default function MapScreen() {
     setFetching(true)
 
     try {
-      const response: Response = await fetch(`${URL}/posts`, {
+      const response = await fetch(`${URL}/posts`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
       })
@@ -55,7 +57,7 @@ export default function MapScreen() {
       return
     }
 
-    const userPosts: PostMarker[] = markers?.filter((marker) => marker.user_id === userId) ?? [] // Id hardcoded for testing purposes
+    const userPosts: PostMarker[] = markers?.filter((marker) => marker.user_id === userId) ?? []
     const userPostCount: number = userPosts.length
 
     if (3 <= userPostCount) {
@@ -162,21 +164,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   modalBackground: {
-    flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.3)",
+    flex: 1,
     justifyContent: "flex-end",
   },
   modalContainer: {
-    backgroundColor: "rgba(255, 255, 255, 1)",
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20,
-    padding: 20,
-    height: "25%",
     alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 1)",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    height: "25%",
+    padding: 20,
   },
   title: {
-    fontWeight: 500,
     fontSize: 20,
+    fontWeight: 500,
   },
   message: {
     fontSize: 16,
@@ -185,28 +187,28 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
-    marginTop: 20,
     gap: 20,
+    marginTop: 20,
   },
   cancelButton: {
+    alignItems: "center",
     backgroundColor: "rgba(255, 0, 0, 1)",
     borderRadius: 4,
     height: 40,
-    width: "30%",
     justifyContent: "center",
-    alignItems: "center",
+    width: "30%",
   },
   buttonText: {
-    fontWeight: 500,
-    fontSize: 16,
     color: "rgba(255, 255, 255, 1)",
+    fontSize: 16,
+    fontWeight: 500,
   },
   confirmButton: {
+    alignItems: "center",
     backgroundColor: "rgba(54, 190, 0, 1)",
     borderRadius: 4,
     height: 40,
-    width: "30%",
     justifyContent: "center",
-    alignItems: "center",
+    width: "30%",
   },
 })

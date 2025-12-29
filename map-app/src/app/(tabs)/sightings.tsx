@@ -33,7 +33,7 @@ export default function SightingsScreen() {
           style={({pressed}) => [
             styles.icon,
             pressed && styles.iconPressed
-          ]} 
+          ]}
         >
           <Ionicons name="repeat-outline" size={24} color="rgba(0, 0, 0, 1)" />
         </Pressable>
@@ -51,7 +51,7 @@ export default function SightingsScreen() {
 
   const fetchReceivedSightings = async (): Promise<void> => {
     try {
-      const response: Response = await fetch(`${URL}/users/${userId}/received-sightings`, {
+      const response = await fetch(`${URL}/users/${userId}/received-sightings`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
       })
@@ -71,7 +71,7 @@ export default function SightingsScreen() {
 
   const fetchCreatedSightings = async (): Promise<void> => {
     try {
-      const response: Response = await fetch(`${URL}/users/${userId}/created-sightings`, {
+      const response = await fetch(`${URL}/users/${userId}/created-sightings`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
       })

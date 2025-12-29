@@ -1,7 +1,7 @@
 import { config } from "../../../../config"
 import { CustomButton } from "../../../../components/CustomButton"
 import { CustomTextInput } from "../../../../components/CustomTextInput"
-import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { ErrorResponse } from "../../../../types/ErrorResponse"
 import { Keyboard, Pressable, StyleSheet, View } from "react-native"
 import { LoadingModal } from "../../../../components/LoadingModal"
@@ -16,6 +16,13 @@ import { UpdatePostPayload } from "../../../../types/UpdatePostPayload"
 export default function EditPostScreen() {
   const {post, title, details, type} = useLocalSearchParams<{post: string, title: string, details: string, type: string}>()
   const postId = Number(post)
+
+  const insets = useSafeAreaInsets()
+  const router = useRouter()
+
+  const URL = config.URL
+  const userId: number = 1  // Hardcoded for testing purposes
+
   const [newTitle, setNewTitle] = useState<string>(title)
   const [newDetails, setNewDetails] = useState<string>(details)
   const [newType, setNewType] = useState<string>(type)
@@ -25,10 +32,6 @@ export default function EditPostScreen() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [alertMessage, setAlertMessage] = useState<string>("")
   const [errorMessage, setErrorMessage] = useState<string>("")
-  const insets: EdgeInsets = useSafeAreaInsets()
-  const router = useRouter()
-  const userId: number = 1  // Hardcoded for testing purposes
-  const URL = config.URL
 
   const checkNewTitle = (): void => {
     if (!newTitle || newTitle.trim() === "") {
@@ -87,7 +90,7 @@ export default function EditPostScreen() {
     }
 
     try {
-      const response: Response = await fetch(`${URL}/users/${userId}/posts/${postId}`, {
+      const response = await fetch(`${URL}/users/${userId}/posts/${postId}`, {
         method: "PUT",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(payload)
@@ -211,10 +214,10 @@ export default function EditPostScreen() {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    flex: 1,
     alignItems: "center",
-    justifyContent: "space-between",
     backgroundColor: "rgba(255, 255, 255, 1)",
+    flex: 1,
+    justifyContent: "space-between",
   },
   upperContent: {
     width: "95%",

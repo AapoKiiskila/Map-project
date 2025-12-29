@@ -1,5 +1,5 @@
 import { config } from "../../../../config"
-import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { ErrorResponse } from "../../../../types/ErrorResponse"
 import { CustomButton } from "../../../../components/CustomButton"
 import { CustomTextInput } from "../../../../components/CustomTextInput"
@@ -13,6 +13,15 @@ import { useLocalSearchParams } from "expo-router"
 import { useRouter } from "expo-router"
 
 export default function NewSightingScreen() {
+  const {post} = useLocalSearchParams<{post: string}>()
+  const postId = Number(post)
+
+  const insets = useSafeAreaInsets()
+  const router = useRouter()
+
+  const URL = config.URL
+  const userId: number = 1  // Hardcoded for testing purposes
+
   const [description, setDescription] = useState<string>("")
   const [descriptionError, setDescriptionError] = useState<boolean>(false)
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false)
@@ -20,12 +29,6 @@ export default function NewSightingScreen() {
   const [alertMessage, setAlertMessage] = useState<string>("")
   const [errorMessage, setErrorMessage] = useState<string>("")
   const [behaviour, setBehaviour] = useState<"height" | undefined>("height")
-  const {post} = useLocalSearchParams<{post: string}>()
-  const postId = Number(post)
-  const insets: EdgeInsets = useSafeAreaInsets()
-  const router = useRouter()
-  const userId: number = 1  // Hardcoded for testing purposes
-  const URL = config.URL
 
   useEffect(() => {
     const showKeyboardListener = Keyboard.addListener("keyboardDidShow", () => {
@@ -71,7 +74,7 @@ export default function NewSightingScreen() {
     }
 
     try {
-      const response: Response = await fetch(`${URL}/sightings/create-sighting`, {
+      const response = await fetch(`${URL}/sightings/create-sighting`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(payload)
@@ -142,18 +145,18 @@ export default function NewSightingScreen() {
 
 const styles = StyleSheet.create({
   keyboardAvoidingView: {
-    flex: 1,
     backgroundColor: "rgba(255, 255, 255, 1)",
+    flex: 1,
   },
   container: {
-    flex: 1,
-    backgroundColor: "rgba(255, 255, 255, 1)",
     alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 1)",
+    flex: 1,
     justifyContent: "space-between",
   },
   upperContent: {
-    width: "95%",
     marginTop: 10,
+    width: "95%",
   },
   lowerContent: {
     width: "95%",
