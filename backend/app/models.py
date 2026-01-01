@@ -1,5 +1,5 @@
 from app.database import Base
-from sqlalchemy import Column, DateTime, DECIMAL, ForeignKey, func, Integer, String
+from sqlalchemy import Boolean, Column, DateTime, DECIMAL, ForeignKey, func, Integer, String, sql
 from sqlalchemy.orm import relationship
 
 class User(Base):
@@ -35,6 +35,7 @@ class Sighting(Base):
 
   id = Column(Integer, primary_key=True)
   description = Column(String(500), nullable=False)
+  is_read = Column(Boolean, server_default=sql.expression.false(), nullable=False)
   time_created = Column(DateTime, nullable=False, server_default=func.UTC_TIMESTAMP())
 
   user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))

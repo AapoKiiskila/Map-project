@@ -1,9 +1,11 @@
 from fastapi import HTTPException, status
 from app.models import Post, Sighting, User
 from app.schemas import sighting_schema
+from app.websocket_connection_manager import manager
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-def create_sighting(new_sighting: sighting_schema.SightingCreate, db: Session):
+async def create_sighting(new_sighting: sighting_schema.SightingCreate, db: Session):
   user = db.query(User).filter(User.id == new_sighting.user_id).first()
 
   if not user:
@@ -25,6 +27,16 @@ def create_sighting(new_sighting: sighting_schema.SightingCreate, db: Session):
 
   db.add(db_sighting)
   db.commit()
+
+  count = (
+    db.query(func.count(Sighting.id))
+    .join(Post, Post.id == Sighting.post_id)
+    .filter(Post.user_id == post.user_id, Sighting.is_read == False)
+    .scalar()
+  )
+  print(count)
+  
+  await manager.send_unread_sightings_count(post.user_id, count)
 
   return {"message": "Sighting created successfully"}
 
