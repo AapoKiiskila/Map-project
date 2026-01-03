@@ -1,5 +1,5 @@
 import React from "react"
-import { SettingsButton } from "../../components/SettingsButton"
+import { SettingsButton } from "../../../components/SettingsButton"
 import { StyleSheet, View } from "react-native"
 import { useRouter } from "expo-router"
 

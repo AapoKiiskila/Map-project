@@ -1,22 +1,21 @@
-import { config } from "../../config"
-import { ErrorResponse } from "../../types/ErrorResponse"
-import { CustomButton } from "../../components/CustomButton"
-import { CustomTextInput } from "../../components/CustomTextInput"
-import { CreatePostPayload } from "../../types/CreatePostPayload"
+import { config } from "../../../../../config"
+import { CustomButton } from "../../../../../components/CustomButton"
+import { CustomTextInput } from "../../../../../components/CustomTextInput"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { ErrorResponse } from "../../../../../types/ErrorResponse"
 import { Keyboard, Pressable, StyleSheet, View } from "react-native"
-import { LoadingModal } from "../../components/LoadingModal"
-import React, { useState } from "react"
+import { LoadingModal } from "../../../../../components/LoadingModal"
+import React, { useState} from "react"
 import { SegmentedButtons } from "react-native-paper"
-import { SuccessResponse } from "../../types/SuccessResponse"
-import { TextInputInfoText } from "../../components/TextInputInfoText"
+import { SuccessResponse } from "../../../../../types/SuccessResponse"
+import { TextInputInfoText } from "../../../../../components/TextInputInfoText"
 import { useLocalSearchParams } from "expo-router"
 import { useRouter } from "expo-router"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { UpdatePostPayload } from "../../../../../types/UpdatePostPayload"
 
-export default function CreatePostScreen() {
-  const {latitude, longitude} = useLocalSearchParams<{latitude: string, longitude: string}>()
-  const lat = Number(latitude)
-  const lon = Number(longitude)
+export default function EditPostScreen() {
+  const {post, title, details, type} = useLocalSearchParams<{post: string, title: string, details: string, type: string}>()
+  const postId = Number(post)
 
   const insets = useSafeAreaInsets()
   const router = useRouter()
@@ -24,59 +23,59 @@ export default function CreatePostScreen() {
   const URL = config.URL
   const userId: number = 1  // Hardcoded for testing purposes
 
-  const [title, setTitle] = useState<string>("")
-  const [titleError, setTitleError] = useState<boolean>(false)
-  const [details, setDetails] = useState<string>("")
-  const [detailsError, setDetailsError] = useState<boolean>(false)
-  const [type, setType] = useState<string>("")
+  const [newTitle, setNewTitle] = useState<string>(title)
+  const [newDetails, setNewDetails] = useState<string>(details)
+  const [newType, setNewType] = useState<string>(type)
+  const [newTitleError, setNewTitleError] = useState<boolean>(false)
+  const [newDetailsError, setNewDetailsError] = useState<boolean>(false)
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [alertMessage, setAlertMessage] = useState<string>("")
   const [errorMessage, setErrorMessage] = useState<string>("")
-  
-  const checkTitle = (): void => {
-    if (!title || title.trim() === "") {
-      setTitleError(true)
+
+  const checkNewTitle = (): void => {
+    if (!newTitle || newTitle.trim() === "") {
+      setNewTitleError(true)
     } else {
-      setTitleError(false)
+      setNewTitleError(false)
     }
   }
-
+  
   const changeTitle = (text: string): void => {
     if (!text || text.trim() === "") {
-      setTitleError(true)
+      setNewTitleError(true)
     } else {
-      setTitleError(false)
+      setNewTitleError(false)
     }
-    
-    setTitle(text)
-  }
 
-  const checkDetails = (): void => {
-    if (!details || details.trim() === "") {
-      setDetailsError(true)
+    setNewTitle(text)
+  }
+  
+  const checkNewDetails = (): void => {
+    if (!newDetails || newDetails.trim() === "") {
+      setNewDetailsError(true)
     } else {
-      setDetailsError(false)
+      setNewDetailsError(false)
     }
   }
-
+  
   const changeDetails = (text: string): void => {
     if (!text || text.trim() === "") {
-      setDetailsError(true)
+      setNewDetailsError(true)
     } else {
-      setDetailsError(false)
+      setNewDetailsError(false)
     }
 
-    setDetails(text)
+    setNewDetails(text)
   }
-
+  
   const changeType = (value: string): void => {
-    if (value === type) {
-      setType("")
+    if (value === newType) {
+      setNewType("")
     } else {
-      setType(value)
+      setNewType(value)
     }
-
+  
     Keyboard.dismiss()
   }
 
@@ -84,18 +83,15 @@ export default function CreatePostScreen() {
     setIsSubmitted(true)
     setIsLoading(true)
 
-    const payload: CreatePostPayload = {
-      title: title,
-      details: details,
-      type: type,
-      latitude: lat,
-      longitude: lon,
-      user_id: userId,
+    const payload: UpdatePostPayload = {
+      title: newTitle,
+      details: newDetails,
+      type: newType
     }
 
     try {
-      const response = await fetch(`${URL}/posts/create-post`, {
-        method: "POST",
+      const response = await fetch(`${URL}/users/${userId}/posts/${postId}`, {
+        method: "PUT",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(payload)
       })
@@ -115,51 +111,51 @@ export default function CreatePostScreen() {
       setIsLoading(false)
     }
   }
-  
+
   return(
     <Pressable style={styles.mainContainer} onPress={Keyboard.dismiss}>
       <View style={styles.upperContent}>
         <View style={styles.titleContainer}>
           <CustomTextInput 
-            error={titleError}
+            error={newTitleError}
             label="Title"
             maxLength={40}
-            onBlur={checkTitle}
+            onBlur={checkNewTitle}
             onChangeText={changeTitle}
-            placeholder="Enter a title"
-            value={title}
+            placeholder="Enter a new title"
+            value={newTitle}
           />
           <TextInputInfoText 
-            error={titleError}
+            error={newTitleError}
             errorMessage={"Title is required"}
             style={{marginTop: 4}}
             textLimit={40}
-            word={title}
+            word={newTitle}
           />
         </View>
         <View style={styles.detailsContainer}>
           <CustomTextInput 
-            error={detailsError}
+            error={newDetailsError}
             label="Details"
             maxLength={500}
             multiline={true}
-            onBlur={checkDetails}
+            onBlur={checkNewDetails}
             onChangeText={changeDetails}
-            placeholder="Enter details"
+            placeholder="Enter new details"
             style={{height: 250}}
-            value={details}
+            value={newDetails}
           />
           <TextInputInfoText
-            error={detailsError}
+            error={newDetailsError}
             errorMessage={"Details are required"}
             style={{marginTop: 4}}
             textLimit={500}
-            word={details}
+            word={newDetails}
           />
         </View>
         <View style={styles.segmentedButtonsContainer}>
           <SegmentedButtons 
-            value={type}
+            value={newType}
             onValueChange={changeType}
             theme={{roundness: 0}}
             buttons={[
@@ -169,7 +165,7 @@ export default function CreatePostScreen() {
                 icon: "dog-side",
                 style: {
                   elevation: 3,
-                  backgroundColor: type === "pet" ? "rgba(165, 165, 165, 1)" : "rgba(255, 255, 255, 1)",
+                  backgroundColor: newType === "pet" ? "rgba(165, 165, 165, 1)" : "rgba(255, 255, 255, 1)",
                   borderRadius: 4,
                   borderWidth: 0,
                   shadowColor: "rgba(0, 0, 0, 1)(255, 255, 255, 1)",
@@ -184,7 +180,7 @@ export default function CreatePostScreen() {
                 icon: "bag-personal",
                 style: {
                   elevation: 3,
-                  backgroundColor: type === "item" ? "rgba(165, 165, 165, 1)" : "rgba(255, 255, 255, 1)",
+                  backgroundColor: newType === "item" ? "rgba(165, 165, 165, 1)" : "rgba(255, 255, 255, 1)",
                   borderRadius: 4,
                   borderWidth: 0,
                   shadowColor: "rgba(0, 0, 0, 1)(255, 255, 255, 1)",
@@ -199,7 +195,7 @@ export default function CreatePostScreen() {
       </View>
       <View style={[styles.lowerContent, {paddingBottom: insets.bottom}]}>
         <CustomButton 
-          disabled={!title || !details || titleError || detailsError || !type || isSubmitted}
+          disabled={(title === newTitle && details === newDetails && type === newType) || !newTitle || !newDetails || newTitleError || newDetailsError || !newType || isSubmitted}
           label="Submit"
           onPress={submit}
         />
