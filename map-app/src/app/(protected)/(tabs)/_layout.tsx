@@ -1,8 +1,11 @@
 import Ionicons from "@expo/vector-icons/Ionicons"
-import React from "react"
+import React, { useContext } from "react"
 import { Tabs } from "expo-router"
+import { UnreadContext } from "../../../context/UnreadContext"
 
 export default function Layout() {
+  const count = useContext(UnreadContext)
+
   return(
     <Tabs>
       <Tabs.Screen 

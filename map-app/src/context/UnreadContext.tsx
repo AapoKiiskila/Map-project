@@ -1,7 +1,7 @@
 import React, { createContext } from "react"
 import useWebsocket from "../hooks/useWebsocket"
 
-export const UnreadContext = createContext<number | null>(null)
+export const UnreadContext = createContext<number>(0)
 
 export function UnreadContextProvider({children}: {children: React.ReactNode}) {
   const count = useWebsocket()
