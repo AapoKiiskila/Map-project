@@ -21,3 +21,6 @@ class UserCreatedSightings(BaseModel):
   post_id: int
   user_id: int
   time_created: datetime
+
+class UserUnreadSightingsCount(BaseModel):
+  count: int

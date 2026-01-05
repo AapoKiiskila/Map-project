@@ -1,6 +1,7 @@
 from fastapi import HTTPException, status
 from app.models import Post, Sighting, User
 from app.schemas import post_schema, user_schema
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 def change_username(user_id: int, new_username: user_schema.UserUpdateUsername, db: Session):
@@ -105,3 +106,18 @@ def update_post(user_id: int, post_id: str, update_data: post_schema.PostUpdate,
   db.commit()
 
   return {"message": "Post has been updated"}
+
+def get_unread_sightings_count(user_id: int, db: Session):
+  user = db.query(User).filter(User.id == user_id).first()
+
+  if not user:
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+  
+  count = (
+    db.query(func.count(Sighting.id))
+    .join(Post, Post.id == Sighting.post_id)
+    .filter(Post.user_id == user_id, Sighting.is_read == False)
+    .scalar()
+  )
+
+  return {"count": count}

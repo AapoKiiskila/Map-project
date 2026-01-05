@@ -14,6 +14,10 @@ def change_new_username(user_id: int, new_username: user_schema.UserUpdateUserna
 def get_my_received_sightings(user_id: int, db: Session = Depends(get_db)):
   return user_crud.get_received_sightings(user_id, db)
 
+@router.get("/users/{user_id}/received-sightings/unread", response_model=user_schema.UserUnreadSightingsCount, status_code=status.HTTP_200_OK)
+def get_my_unread_sightings(user_id: int, db: Session = Depends(get_db)):
+  return user_crud.get_unread_sightings_count(user_id, db)
+
 @router.get("/users/{user_id}/created-sightings", response_model=list[user_schema.UserCreatedSightings], status_code=status.HTTP_200_OK)
 def get_my_created_sightings(user_id: int, db: Session = Depends(get_db)):
   return user_crud.get_created_sightings(user_id, db)
