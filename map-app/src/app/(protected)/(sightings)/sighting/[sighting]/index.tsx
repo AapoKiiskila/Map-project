@@ -9,11 +9,13 @@ import { LocalDateAndTime } from "../../../../../components/LocalDateAndTime"
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native"
 import React, { useEffect, useState } from "react"
 import { SuccessResponse } from "../../../../../types/SuccessResponse"
+import { UpdateIsRead } from "../../../../../types/UpdateIsRead"
 import { useNavigation } from "@react-navigation/native"
 import { useLocalSearchParams, useRouter } from "expo-router"
 
 export default function SightingScreen() {
-  const {sighting, description, type, postId, sightingUserId, time, username} = useLocalSearchParams<{sighting: string, description: string, type: string, postId: string, sightingUserId: string, time: string, username: string}>()
+  const {sighting, description, type, postId, sightingUserId, time, isRead, username} = useLocalSearchParams<{sighting: string, description: string, type: string, postId: string, sightingUserId: string, time: string, isRead: string, username: string}>()
+  const isReadByUser = Number(isRead)
   const sightingId = Number(sighting)
   const userIdNumber = Number(sightingUserId)
 
@@ -49,7 +51,28 @@ export default function SightingScreen() {
           )
         : null
     })
+
+    if ((isReadByUser === 0) && (userId !== userIdNumber)) {
+      markAsRead()
+    }
   }, [navigation])
+
+  const markAsRead = async (): Promise<void> => {
+    const payload: UpdateIsRead = {
+      is_read: 1,
+      user_id: userId
+    }
+
+    try {
+      await fetch(`${URL}/sightings/${sightingId}`, {
+        method: "PUT",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(payload)
+      })
+    } catch (error) {
+      return
+    }
+  }
 
   const deleteSighting = async (): Promise<void> => {
     setShowConfirmAlert(false)

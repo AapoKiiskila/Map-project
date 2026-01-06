@@ -34,7 +34,6 @@ async def create_sighting(new_sighting: sighting_schema.SightingCreate, db: Sess
     .filter(Post.user_id == post.user_id, Sighting.is_read == False)
     .scalar()
   )
-  print(count)
   
   await manager.send_unread_sightings_count(post.user_id, count)
 
@@ -55,3 +54,29 @@ def delete_sighting(user_id: int, sighting_id: int, db: Session):
   db.commit()
 
   return {"message": "The sighting has been permanently deleted."}
+
+async def update_sighting_is_read(sighting_id: int, update_data: sighting_schema.SightingUpdateIsRead, db: Session):
+  user = db.query(User).filter(User.id == update_data.user_id).first()
+
+  if not user:
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+  
+  sighting = db.query(Sighting).filter(Sighting.id == sighting_id).first()
+
+  if not sighting:
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Sighting not found")
+  
+  sighting.is_read = update_data.is_read
+
+  db.commit()
+
+  count = (
+    db.query(func.count(Sighting.id))
+    .join(Post, Post.id == Sighting.post_id)
+    .filter(Post.user_id == update_data.user_id, Sighting.is_read == False)
+    .scalar()
+  )
+
+  await manager.send_unread_sightings_count(update_data.user_id, count)
+
+  return

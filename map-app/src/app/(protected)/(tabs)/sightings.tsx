@@ -94,7 +94,7 @@ export default function SightingsScreen() {
     }
   }
 
-  const navigateToReceivedSighting = (id: number, description: string, type: string, postId: number, sightingUserId: number, time: string, username: string): void => {
+  const navigateToReceivedSighting = (id: number, description: string, type: string, postId: number, sightingUserId: number, time: string, isRead: number, username: string): void => {
     setIsPressed(true)
 
     router.push({
@@ -105,6 +105,7 @@ export default function SightingsScreen() {
         postId: postId,
         sightingUserId: sightingUserId,
         time: time,
+        isRead: isRead,
         username: username
       }
     })
@@ -144,7 +145,8 @@ export default function SightingsScreen() {
                     item.type, 
                     item.post_id, 
                     item.user_id, 
-                    item.time_created, 
+                    item.time_created,
+                    item.is_read,
                     item.username
                   )
                 }
