@@ -1,10 +1,38 @@
+import { config } from "../../../config"
 import Ionicons from "@expo/vector-icons/Ionicons"
-import React, { useContext } from "react"
+import React, { useContext, useEffect } from "react"
 import { Tabs } from "expo-router"
 import { UnreadContext } from "../../../context/UnreadContext"
+import { UnreadPostsCount } from "../../../types/UnreadPostsCount"
 
 export default function Layout() {
-  const count = useContext(UnreadContext)
+  const {count, setCount} = useContext(UnreadContext)
+  
+  const URL = config.URL
+  const userId: number = 1  // Hardcoded for testing purposesv
+
+  useEffect(() => {
+    fetchUnreadPostsCount()
+  }, [])
+
+  const fetchUnreadPostsCount = async (): Promise<void> => {
+    try {
+      const response = await fetch(`${URL}/users/${userId}/received-sightings/unread`, {
+        method: "GET",
+        headers: {"Content-Type": "application/json"},
+      })
+        
+      if (response.ok) {
+        const data: UnreadPostsCount = await response.json()
+        setCount(data.count)
+      } else {
+        return
+      }
+    }
+    catch (error) {
+      return
+    }
+  }
 
   return(
     <Tabs>
@@ -30,6 +58,7 @@ export default function Layout() {
       <Tabs.Screen 
         name="sightings"
         options={{
+          tabBarBadge: count !== 0 ? count : undefined,
           headerShown: true,
           title: "Sightings",
           tabBarIcon: ({ color, size }) => (
