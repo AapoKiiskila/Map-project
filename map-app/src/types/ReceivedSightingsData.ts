@@ -6,5 +6,6 @@ export type ReceivedSightingsData = {
   post_id: number
   user_id: number
   time_created: string
+  is_read: number
   username: string
 }

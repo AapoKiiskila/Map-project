@@ -5,12 +5,14 @@ import { FlatList, Pressable, StyleSheet, Text, View } from "react-native"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import { LoadingModal } from "../../../components/LoadingModal"
 import { LocalDateAndTime } from "../../../components/LocalDateAndTime"
-import React, { useCallback, useEffect, useState} from "react"
+import React, { useCallback, useContext, useEffect, useState} from "react"
 import { ReceivedSightingsData } from "../../../types/ReceivedSightingsData"
+import { UnreadContext } from "../../../context/UnreadContext"
 import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import { useRouter } from "expo-router"
 
 export default function SightingsScreen() {
+  const {count} = useContext(UnreadContext)
   const navigation = useNavigation()
   const router = useRouter()
 
@@ -41,9 +43,12 @@ export default function SightingsScreen() {
     })
   }, [navigation, showReceived])
 
+  useEffect(() => {
+    fetchReceivedSightings()
+  }, [count])
+
   useFocusEffect(
     useCallback(() => {
-      fetchReceivedSightings()
       fetchCreatedSightings()
       setIsPressed(false)
     }, [])
@@ -150,8 +155,8 @@ export default function SightingsScreen() {
               >
                 <View style={styles.textContainer}>
                   <Text style={styles.postTitle}>{item.title}</Text>
-                  <Text style={styles.senderName}>{item.username}</Text>
-                  <LocalDateAndTime time={item.time_created} />
+                  <Text style={[styles.senderName, item.is_read === 0 ? {fontWeight: "500"} : {fontWeight: "normal"}]}>{item.username}</Text>
+                  <LocalDateAndTime time={item.time_created} unread={item.is_read}/>
                 </View>
                 <Ionicons 
                   name="chevron-forward" 

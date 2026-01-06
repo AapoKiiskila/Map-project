@@ -12,6 +12,7 @@ class UserReceivedSightings(BaseModel):
   post_id: int
   user_id: int
   time_created: datetime
+  is_read: int
   username: str
 
 class UserCreatedSightings(BaseModel):

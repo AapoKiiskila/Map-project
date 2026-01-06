@@ -8,9 +8,10 @@ type Props = {
   alwaysAccurateTime?: boolean
   text?: string
   time: string
+  unread?: number
 }
 
-export function LocalDateAndTime({accureateAfterWeek, alwaysAccurateTime, text, time}: Props) {
+export function LocalDateAndTime({accureateAfterWeek, alwaysAccurateTime, text, time, unread}: Props) {
   const pastDateAndTime: Date = new Date(time + "Z")
   const result: string = formatDistanceToNowStrict(pastDateAndTime, {locale: enGB, addSuffix: true})
   const accurateTime: string = format(pastDateAndTime, "PPp", {locale: enGB})
@@ -21,7 +22,7 @@ export function LocalDateAndTime({accureateAfterWeek, alwaysAccurateTime, text, 
 
   return(
     <View>
-      <Text style={styles.text}>{text}{displayTime}</Text>
+      <Text style={[styles.text, unread === 0 ? {fontWeight: 500} : {fontWeight: "normal"}]}>{text}{displayTime}</Text>
     </View>
   )
 }
