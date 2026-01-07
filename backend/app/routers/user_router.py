@@ -35,5 +35,5 @@ def delete_one_post(user_id: int, post_id: int, db: Session = Depends(get_db)):
   return post_crud.delete_post(user_id, post_id, db)
 
 @router.delete("/users/{user_id}/sightings/{sighting_id}", status_code=status.HTTP_200_OK)
-def delete_one_sighting(user_id: int, sighting_id: int, db: Session = Depends(get_db)):
-  return sighting_crud.delete_sighting(user_id, sighting_id, db)
+async def delete_one_sighting(user_id: int, sighting_id: int, db: Session = Depends(get_db)):
+  return await sighting_crud.delete_sighting(user_id, sighting_id, db)
