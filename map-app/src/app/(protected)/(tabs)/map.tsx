@@ -5,10 +5,12 @@ import { Modal, Pressable, StyleSheet, Text, TouchableOpacity, TouchableWithoutF
 import { PostMarker } from "../../../types/PostMarker"
 import React, { useCallback, useState } from "react"
 import { useFocusEffect } from "@react-navigation/native"
+import useLocation from "../../../hooks/useLocation"
 import { useRouter } from "expo-router"
 
 export default function MapScreen() {
   const router = useRouter()
+  const userLocation = useLocation()
 
   const URL = config.URL
   const userId: number = 1  // Hardcoded for testing purposesv
@@ -103,7 +105,11 @@ export default function MapScreen() {
 
   return(
     <>
-      <MapView style={styles.map} onLongPress={addMarker}>
+      <MapView 
+        style={styles.map} 
+        onLongPress={addMarker}
+        initialRegion={userLocation ? {latitude: userLocation.latitude, longitude: userLocation.longitude, latitudeDelta: 0.01, longitudeDelta: 0.01} : undefined}
+      >
         {userMarker && <Marker coordinate={userMarker} />}
         {markers && markers.map(marker => (
           <Marker

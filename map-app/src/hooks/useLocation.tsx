@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import * as Location from "expo-location"
 
 export default function useLocation() {
-  const [userLocation, setUserLocation] = useState<LatLng | null>(null)
+  const [userLocation, setUserLocation] = useState<LatLng | undefined>(undefined)
 
   useEffect(() => {
     (async () => {
@@ -32,9 +32,5 @@ export default function useLocation() {
     })()
   }, [])
 
-  if (!userLocation) {
-    return null
-  } else {
-    return userLocation
-  }
+  return userLocation
 }
