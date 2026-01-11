@@ -109,6 +109,7 @@ export default function MapScreen() {
         style={styles.map} 
         onLongPress={addMarker}
         initialRegion={userLocation ? {latitude: userLocation.latitude, longitude: userLocation.longitude, latitudeDelta: 0.01, longitudeDelta: 0.01} : undefined}
+        showsUserLocation={userLocation ? true : false}
       >
         {userMarker && <Marker coordinate={userMarker} />}
         {markers && markers.map(marker => (
