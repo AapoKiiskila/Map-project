@@ -109,6 +109,7 @@ export default function MapScreen() {
         style={styles.map} 
         onLongPress={addMarker}
         initialRegion={userLocation ? {latitude: userLocation.latitude, longitude: userLocation.longitude, latitudeDelta: 0.01, longitudeDelta: 0.01} : undefined}
+        showsMyLocationButton={false}
         showsUserLocation={userLocation ? true : false}
       >
         {userMarker && <Marker coordinate={userMarker} />}
@@ -142,6 +143,7 @@ export default function MapScreen() {
 
       <Modal
         animationType="fade"
+        statusBarTranslucent={true}
         transparent={true}
         visible={modalVisible}
       >

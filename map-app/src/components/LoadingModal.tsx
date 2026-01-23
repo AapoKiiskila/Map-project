@@ -14,6 +14,7 @@ export function LoadingModal({alertMessage, errorMessage, isLoading, isVisible, 
   return(
     <Modal
       animationType="fade"
+      statusBarTranslucent={true}
       transparent={true}
       visible={isVisible}
     >
