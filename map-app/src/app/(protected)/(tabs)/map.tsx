@@ -1,14 +1,16 @@
 import { config } from "../../../config"
 import { LoadingModal } from "../../../components/LoadingModal"
 import MapView, { LatLng, LongPressEvent, Marker }  from "react-native-maps"
-import { Modal, Pressable, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native"
+import { Modal, Platform,  Pressable, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native"
 import { PostMarker } from "../../../types/PostMarker"
 import React, { useCallback, useState } from "react"
 import { useFocusEffect } from "@react-navigation/native"
 import useLocation from "../../../hooks/useLocation"
 import { useRouter } from "expo-router"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 export default function MapScreen() {
+  const insets = useSafeAreaInsets()
   const router = useRouter()
   const userLocation = useLocation()
 
@@ -111,6 +113,12 @@ export default function MapScreen() {
         initialRegion={userLocation ? {latitude: userLocation.latitude, longitude: userLocation.longitude, latitudeDelta: 0.01, longitudeDelta: 0.01} : undefined}
         showsMyLocationButton={false}
         showsUserLocation={userLocation ? true : false}
+        mapPadding={Platform.OS === "android" ? {
+          top: insets.top,
+          right: 0,
+          bottom: 0,
+          left: 0,
+        } : undefined}
       >
         {userMarker && <Marker coordinate={userMarker} />}
         {markers && markers.map(marker => (
@@ -128,7 +136,7 @@ export default function MapScreen() {
       </MapView>
 
       <LoadingModal 
-        errorMessage={"You have already created the maximum amount of posts."} 
+        errorMessage={"You have already created the maximum amount of posts."}
         isLoading={false} 
         isVisible={limitError}
         onPress={() => {setLimitError(false)}}
