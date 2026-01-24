@@ -3,7 +3,7 @@ import { LoadingModal } from "../../../components/LoadingModal"
 import MapView, { LatLng, LongPressEvent, Marker }  from "react-native-maps"
 import { Modal, Platform,  Pressable, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native"
 import { PostMarker } from "../../../types/PostMarker"
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { useFocusEffect } from "@react-navigation/native"
 import useLocation from "../../../hooks/useLocation"
 import { useRouter } from "expo-router"
@@ -12,7 +12,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 export default function MapScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
-  const userLocation = useLocation()
+  const {userLocation, userLocationFound} = useLocation()
 
   const URL = config.URL
   const userId: number = 1  // Hardcoded for testing purposesv
@@ -27,8 +27,10 @@ export default function MapScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      fetchPosts()
-    }, [])
+      if (userLocation) {
+        fetchPosts()
+      }
+    }, [userLocationFound])
   )
 
   const fetchPosts = async (): Promise<void> => {
@@ -105,12 +107,16 @@ export default function MapScreen() {
     })
   }
 
+  if (!userLocation) {
+    return null
+  }
+
   return(
     <>
       <MapView 
         style={styles.map} 
         onLongPress={addMarker}
-        initialRegion={userLocation ? {latitude: userLocation.latitude, longitude: userLocation.longitude, latitudeDelta: 0.01, longitudeDelta: 0.01} : undefined}
+        initialRegion={{latitude: userLocation.latitude, longitude: userLocation.longitude, latitudeDelta: 0.01, longitudeDelta: 0.01}}
         showsMyLocationButton={false}
         showsUserLocation={userLocation ? true : false}
         mapPadding={Platform.OS === "android" ? {

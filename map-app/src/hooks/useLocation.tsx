@@ -4,6 +4,7 @@ import * as Location from "expo-location"
 
 export default function useLocation() {
   const [userLocation, setUserLocation] = useState<LatLng | undefined>(undefined)
+  const [userLocationFound, setUserLocationFound] = useState<boolean>(false)
 
   useEffect(() => {
     (async () => {
@@ -23,6 +24,8 @@ export default function useLocation() {
             latitude: location.coords.latitude,
             longitude: location.coords.longitude
           })
+
+          setUserLocationFound(true)
         }
       )
 
@@ -32,5 +35,5 @@ export default function useLocation() {
     })()
   }, [])
 
-  return userLocation
+  return {userLocation, userLocationFound}
 }
