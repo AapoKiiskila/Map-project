@@ -1,10 +1,30 @@
 from fastapi import HTTPException, status
 from app.models import Post, User
 from app.schemas import post_schema
+from decimal import Decimal
 from sqlalchemy.orm import Session
 
-def get_all_posts(db: Session):
-  posts = db.query(Post).all()
+def get_all_posts(id: int | None, latitude: Decimal | None, longitude: Decimal | None, db: Session):
+  if not id or id < 1 or not (-90 <= latitude <= 90) or not (-180 <= longitude <= 180):
+    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Bad request")
+  
+  min_latitude = latitude - 5
+  max_latitude = latitude + 5
+  min_longitude = longitude - 5
+  max_longitude = longitude + 5
+  
+  posts_nearby = (
+    db.query(Post)
+    .filter(min_latitude <= Post.latitude)
+    .filter(Post.latitude <= max_latitude)
+    .filter(min_longitude <= Post.longitude)
+    .filter(Post.longitude <= max_longitude)
+    .all()
+  )
+
+  my_posts = db.query(Post).filter(Post.user_id == id).all()
+
+  posts = posts_nearby + my_posts
   
   return posts
 

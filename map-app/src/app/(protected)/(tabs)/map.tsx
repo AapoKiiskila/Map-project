@@ -15,7 +15,7 @@ export default function MapScreen() {
   const {userLocation, userLocationFound} = useLocation()
 
   const URL = config.URL
-  const userId: number = 1  // Hardcoded for testing purposesv
+  const userId: number = 1  // Hardcoded for testing purposes
 
   const [userMarker, setUserMarker] = useState<LatLng | null>(null)
   const [markers, setMarkers] = useState<PostMarker[] | null>(null)
@@ -34,10 +34,14 @@ export default function MapScreen() {
   )
 
   const fetchPosts = async (): Promise<void> => {
+    if (!userLocation) {
+      return
+    }
+
     setFetching(true)
 
     try {
-      const response = await fetch(`${URL}/posts`, {
+      const response = await fetch(`${URL}/posts?id=${userId}&latitude=${userLocation.latitude}&longitude=${userLocation.longitude}`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
       })
