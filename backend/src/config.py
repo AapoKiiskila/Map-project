@@ -1,12 +1,12 @@
 import pathlib
-from pydantic_settings import BaseSettings, SettingsConfigDict
+import pydantic_settings
 
 backend_directory = pathlib.Path(__file__).parent.parent.resolve()
 env_path = backend_directory / ".env"
 
-class Settings(BaseSettings):
+class Settings(pydantic_settings.BaseSettings):
   DATABASE_URL: str
 
-  model_config = SettingsConfigDict(env_file=env_path)
+  model_config = pydantic_settings.SettingsConfigDict(env_file=env_path)
 
 settings = Settings()
