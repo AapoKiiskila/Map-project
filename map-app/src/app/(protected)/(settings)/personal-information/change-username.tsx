@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Keyboard, KeyboardAvoidingView, Platform, Pressable, StyleSheet, View } from "react-native"
 import { LoadingModal } from "../../../../components/LoadingModal"
 import React, { useState, useEffect } from "react"
-import { SuccessResponse } from "../../../../types/SuccessResponse"
+import { SuccessfulUsernameChange } from "../../../../types/SuccessfulUsernameChange"
 import { TextInputInfoText } from "../../../../components/TextInputInfoText"
 import { UpdateUsernamePayload } from "../../../../types/UpdateUsernamePayload"
 import { useRouter } from "expo-router"
@@ -75,8 +75,9 @@ export default function ChangeUsernameScreen() {
       })
     
       if (response.ok) {
-        const data: SuccessResponse = await response.json()
+        const data: SuccessfulUsernameChange = await response.json()
         setAlertMessage(data.message)
+        console.log(data.username)
       } else {
         const errorData: ErrorResponse = await response.json()
         setErrorMessage(errorData.detail)
@@ -90,7 +91,6 @@ export default function ChangeUsernameScreen() {
     }
   }
   
-
   return(
     <KeyboardAvoidingView 
       style={styles.keyboardAvoidingView}

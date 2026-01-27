@@ -23,7 +23,7 @@ def change_username(user_id: int, new_username: src.schemas.user_schema.UserUpda
 
   db.commit()
 
-  return{"message": "Username has been changed"}
+  return{"message": "Username has been changed", "username": new_username.username}
 
 def change_email(user_id: int, new_email: src.schemas.user_schema.UserUpdateEmail, db: sqlalchemy.orm.Session):
   user = db.query(src.models.User).filter(src.models.User.id == user_id).first()

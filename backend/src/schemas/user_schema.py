@@ -4,6 +4,10 @@ import pydantic
 class UserUpdateUsername(pydantic.BaseModel):
   username: str
 
+class UserUpdateUsernameResponse(pydantic.BaseModel):
+  message: str
+  username: str
+
 class UserUpdateEmail(pydantic.BaseModel):
   email: str
 
