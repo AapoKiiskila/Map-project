@@ -5,15 +5,15 @@ type Props = {
   error: boolean
   errorMessage: string
   style?: object
-  textLimit: number
-  word: string
+  textLimit?: number
+  word?: string
 }
 
 export function TextInputInfoText({error, errorMessage, style, textLimit, word}: Props) {
   return(
     <View style={[styles.container, style]}>
       {error ? <Text style={styles.leftText}>{errorMessage}</Text> : <Text style={styles.leftText}></Text>}
-      <Text style={styles.rightText}>{word.length} / {textLimit}</Text>
+      {word && textLimit && <Text style={styles.rightText}>{word.length} / {textLimit}</Text>}
     </View>
   )
 }

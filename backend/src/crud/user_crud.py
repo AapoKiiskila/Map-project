@@ -25,6 +25,26 @@ def change_username(user_id: int, new_username: src.schemas.user_schema.UserUpda
 
   return{"message": "Username has been changed"}
 
+def change_email(user_id: int, new_email: src.schemas.user_schema.UserUpdateEmail, db: sqlalchemy.orm.Session):
+  user = db.query(src.models.User).filter(src.models.User.id == user_id).first()
+
+  if not user:
+    raise fastapi.HTTPException(status_code=fastapi.status.HTTP_404_NOT_FOUND, detail="User not found")
+  
+  if not new_email:
+    raise fastapi.HTTPException(status_code=fastapi.status.HTTP_400_BAD_REQUEST, detail="Enter a valid email address")
+  
+  user_by_email = db.query(src.models.User).filter(src.models.User.email == new_email.email).first()
+  
+  if user_by_email:
+    raise fastapi.HTTPException(status_code=fastapi.status.HTTP_400_BAD_REQUEST, detail="An account with this email address already exists")
+  
+  user.email = new_email.email
+
+  db.commit()
+
+  return{"message": "Email address has been changed", "email": new_email.email}
+
 def get_received_sightings(user_id: int, db: sqlalchemy.orm.Session):
   user = db.query(src.models.User).filter(src.models.User.id == user_id).first()
   

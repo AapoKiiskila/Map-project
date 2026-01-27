@@ -10,7 +10,7 @@ export default function PersonalInformationScreen() {
     <View style={styles.container}>
       <View style={styles.contentContainer}>
         <SettingsButton onPress={() => router.push("/personal-information/change-username")} extraText="Placeholder" text="Username" />
-        <SettingsButton onPress={() => {}} extraText="placeholder@gmail.com" text="Email" />
+        <SettingsButton onPress={() => router.push("/personal-information/change-email")} extraText="placeholder@gmail.com" text="Email" />
         <SettingsButton onPress={() => {}} extraText="********" text="Password" />
       </View>
     </View>

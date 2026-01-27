@@ -13,6 +13,10 @@ router = fastapi.APIRouter()
 def change_new_username(user_id: int, new_username: src.schemas.user_schema.UserUpdateUsername, db: sqlalchemy.orm.Session = fastapi.Depends(src.database.get_db)):
   return src.crud.user_crud.change_username(user_id, new_username, db)
 
+@router.put("/users/{user_id}/update-email", response_model=src.schemas.user_schema.UserUpdateEmailResponse, status_code=fastapi.status.HTTP_200_OK)
+def change_new_email(user_id: int, new_email: src.schemas.user_schema.UserUpdateEmail, db: sqlalchemy.orm.Session = fastapi.Depends(src.database.get_db)):
+  return src.crud.user_crud.change_email(user_id, new_email, db)
+
 @router.get("/users/{user_id}/received-sightings", response_model=list[src.schemas.user_schema.UserReceivedSightings], status_code=fastapi.status.HTTP_200_OK)
 def get_my_received_sightings(user_id: int, db: sqlalchemy.orm.Session = fastapi.Depends(src.database.get_db)):
   return src.crud.user_crud.get_received_sightings(user_id, db)
