@@ -26,8 +26,6 @@ def get_all_posts(id: int | None, latitude: decimal.Decimal | None, longitude: d
   my_posts = db.query(src.models.Post).filter(src.models.Post.user_id == id).all()
 
   posts = posts_nearby + my_posts
-
-  print(posts)
   
   return posts
 
