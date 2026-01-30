@@ -4,6 +4,41 @@ import src.schemas.post_schema
 import src.schemas.user_schema
 import sqlalchemy
 import sqlalchemy.orm
+import src.utils
+
+def create_user(new_user: src.schemas.user_schema.UserCreate, db: sqlalchemy.orm.Session):
+  if not new_user.username or not new_user.username.strip():
+    raise fastapi.HTTPException(status_code=fastapi.status.HTTP_400_BAD_REQUEST, detail="A valid username is required")
+  
+  if not new_user.email or not new_user.email.strip():
+    raise fastapi.HTTPException(status_code=fastapi.status.HTTP_400_BAD_REQUEST, detail="A valid email address is required")
+  
+  if not new_user.plain_password or not new_user.plain_password.strip():
+    raise fastapi.HTTPException(status_code=fastapi.status.HTTP_400_BAD_REQUEST, detail="A valid password is required")
+  
+  user_by_username = db.query(src.models.User).filter(src.models.User.username == new_user.username).first()
+
+  if user_by_username:
+    raise fastapi.HTTPException(status_code=fastapi.status.HTTP_400_BAD_REQUEST, detail="An account with this username already exists")
+  
+  user_by_email = db.query(src.models.User).filter(src.models.User.email == new_user.email).first()
+
+  if user_by_email:
+    raise fastapi.HTTPException(status_code=fastapi.status.HTTP_400_BAD_REQUEST, detail="An account with this email address already exists")
+  
+  new_hashed_password = src.utils.hash_password(new_user.plain_password)
+
+  db_new_user = src.models.User(
+    username = new_user.username,
+    email = new_user.email,
+    hashed_password = new_hashed_password
+  )
+
+  db.add(db_new_user)
+  db.commit()
+
+  return{"message": "A new account has been successfully created"}
+
 
 def change_username(user_id: int, new_username: src.schemas.user_schema.UserUpdateUsername, db: sqlalchemy.orm.Session):
   user = db.query(src.models.User).filter(src.models.User.id == user_id).first()

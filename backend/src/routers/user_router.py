@@ -12,6 +12,10 @@ router = fastapi.APIRouter(
   tags=["Users"],
 )
 
+@router.post("", status_code=fastapi.status.HTTP_201_CREATED)
+def create_new_user(new_user: src.schemas.user_schema.UserCreate, db: sqlalchemy.orm.Session = fastapi.Depends(src.database.get_db)):
+  return src.crud.user_crud.create_user(new_user, db)
+
 @router.put("/{user_id}/update-username", response_model=src.schemas.user_schema.UserUpdateUsernameResponse, status_code=fastapi.status.HTTP_200_OK)
 def change_new_username(user_id: int, new_username: src.schemas.user_schema.UserUpdateUsername, db: sqlalchemy.orm.Session = fastapi.Depends(src.database.get_db)):
   return src.crud.user_crud.change_username(user_id, new_username, db)
