@@ -1,6 +1,6 @@
 import React from "react"
 import { Stack } from "expo-router"
-import { UnreadContextProvider } from "../../context/UnreadContext"
+import { UnreadContextProvider } from "../../../context/UnreadContext"
 
 export default function ProtectedLayout() {
   return(

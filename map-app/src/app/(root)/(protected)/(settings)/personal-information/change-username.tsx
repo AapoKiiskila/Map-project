@@ -1,26 +1,25 @@
-import { config } from "../../../../config"
-import { ErrorResponse } from "../../../../types/ErrorResponse"
-import { CustomButton } from "../../../../components/CustomButton"
-import { CustomTextInput } from "../../../../components/CustomTextInput"
-import isEmail from "validator/lib/isEmail"
-import { Keyboard, KeyboardAvoidingView, Platform, Pressable, StyleSheet, View } from "react-native"
-import { LoadingModal } from "../../../../components/LoadingModal"
-import React, { useState, useEffect } from "react"
-import { SuccessfulEmailChange } from "../../../../types/SuccessfulEmailChange"
-import { TextInputInfoText } from "../../../../components/TextInputInfoText"
-import { UpdateEmailPayload } from "../../../../types/UpdateEmailPayload"
+import { config } from "../../../../../config"
+import { ErrorResponse } from "../../../../../types/ErrorResponse"
+import { CustomButton } from "../../../../../components/CustomButton"
+import { CustomTextInput } from "../../../../../components/CustomTextInput"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { Keyboard, KeyboardAvoidingView, Platform, Pressable, StyleSheet, View } from "react-native"
+import { LoadingModal } from "../../../../../components/LoadingModal"
+import React, { useState, useEffect } from "react"
+import { SuccessfulUsernameChange } from "../../../../../types/SuccessfulUsernameChange"
+import { TextInputInfoText } from "../../../../../components/TextInputInfoText"
+import { UpdateUsernamePayload } from "../../../../../types/UpdateUsernamePayload"
 import { useRouter } from "expo-router"
 
-export default function ChangeEmailScreen() {
+export default function ChangeUsernameScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
 
   const URL = config.URL
   const userId: number = 1  // Hardcoded for testing purposes
 
-  const [newEmail, setNewEmail] = useState<string>("")
-  const [newEmailError, setNewEmailError] = useState<boolean>(false)
+  const [newUsername, setNewUsername] = useState<string>("")
+  const [newUsernameError, setNewUsernameError] = useState<boolean>(false)
   const [behaviour, setBehaviour] = useState<"height" | undefined>("height")
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -42,42 +41,43 @@ export default function ChangeEmailScreen() {
     }
   }, [])
 
-  const checkNewEmail = (): void => {
-    if (!isEmail(newEmail)) {
-      setNewEmailError(true)
+  const checkNewUsername = (): void => {
+    if (!newUsername || newUsername.trim() === "" || newUsername.length <= 2) {
+      setNewUsernameError(true)
     } else {
-      setNewEmailError(false)
+      setNewUsernameError(false)
     }
   }
 
-  const changeNewEmail = (text: string): void => {
-    if (!isEmail(newEmail)) {
-      setNewEmailError(true)
+  const changeNewUsername = (text: string): void => {
+    if (!text || text.trim() === "" || text.length <= 2) {
+      setNewUsernameError(true)
     } else {
-      setNewEmailError(false)
+      setNewUsernameError(false)
     }
     
-    setNewEmail(text)
+    setNewUsername(text)
   }
 
-  const changeEmail = async (): Promise<void> => {
+  const changeUsername = async (): Promise<void> => {
     setIsSubmitted(true)
     setIsLoading(true)
 
-    const payload: UpdateEmailPayload = {
-      email: newEmail
+    const payload: UpdateUsernamePayload = {
+      username: newUsername
     }
     
     try {
-      const response = await fetch(`${URL}/users/${userId}/update-email`, {
+      const response = await fetch(`${URL}/users/${userId}/update-username`, {
         method: "PUT",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(payload)
       })
     
       if (response.ok) {
-        const data: SuccessfulEmailChange = await response.json()
+        const data: SuccessfulUsernameChange = await response.json()
         setAlertMessage(data.message)
+        console.log(data.username)
       } else {
         const errorData: ErrorResponse = await response.json()
         setErrorMessage(errorData.detail)
@@ -91,7 +91,6 @@ export default function ChangeEmailScreen() {
     }
   }
   
-
   return(
     <KeyboardAvoidingView 
       style={styles.keyboardAvoidingView}
@@ -101,25 +100,27 @@ export default function ChangeEmailScreen() {
       <Pressable style={styles.container} onPress={Keyboard.dismiss}>
         <View style={styles.upperContent}>
           <CustomTextInput
-            error={newEmailError}
-            label="New email address" 
-            placeholder="Enter a new email address"
-            value={newEmail} 
-            onChangeText={changeNewEmail}
-            onBlur={checkNewEmail}
-            textType="email"
+            error={newUsernameError}
+            label="New username" 
+            maxLength={50} 
+            placeholder="Enter a new username"
+            value={newUsername} 
+            onChangeText={changeNewUsername}
+            onBlur={checkNewUsername}
           />
           <TextInputInfoText 
-            error={newEmailError} 
-            errorMessage="Enter a valid email address" 
+            error={newUsernameError} 
+            errorMessage="Enter a valid username" 
             style={{marginTop: 4}} 
+            textLimit={50} 
+            word={newUsername} 
           />
         </View>
         <View style={[styles.lowerContent, {paddingBottom: insets.bottom}]}>
           <CustomButton 
-            disabled={!newEmail || newEmailError || isSubmitted}
+            disabled={!newUsername || newUsernameError || isSubmitted}
             label="Submit" 
-            onPress={changeEmail} 
+            onPress={changeUsername} 
           />
         </View>
 

@@ -1,9 +1,9 @@
-import { config } from "../../../config"
+import { config } from "../../../../config"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import React, { useContext, useEffect } from "react"
 import { Tabs } from "expo-router"
-import { UnreadContext } from "../../../context/UnreadContext"
-import { UnreadPostsCount } from "../../../types/UnreadPostsCount"
+import { UnreadContext } from "../../../../context/UnreadContext"
+import { UnreadPostsCount } from "../../../../types/UnreadPostsCount"
 
 export default function Layout() {
   const {count, setCount} = useContext(UnreadContext)
