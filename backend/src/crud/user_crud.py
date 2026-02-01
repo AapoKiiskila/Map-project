@@ -6,6 +6,22 @@ import sqlalchemy
 import sqlalchemy.orm
 import src.utils
 
+def get_user(user_id: int, db: sqlalchemy.orm.Session):
+  if not user_id:
+    raise fastapi.HTTPException(status_code=fastapi.status.HTTP_400_BAD_REQUEST, detail="Error while fetching user data")
+  
+  user_data = (
+    db.query(
+      src.models.User.id,
+      src.models.User.username,
+      src.models.User.email
+    )
+    .filter(src.models.User.id == user_id)
+    .first()
+  )
+
+  return user_data
+
 def create_user(new_user: src.schemas.user_schema.UserCreate, db: sqlalchemy.orm.Session):
   if not new_user.username or not new_user.username.strip():
     raise fastapi.HTTPException(status_code=fastapi.status.HTTP_400_BAD_REQUEST, detail="A valid username is required")
