@@ -17,7 +17,7 @@ router = fastapi.APIRouter(
 def create_new_user(new_user: src.schemas.user_schema.UserCreate, db: sqlalchemy.orm.Session = fastapi.Depends(src.database.get_db)):
   return src.crud.user_crud.create_user(new_user, db)
 
-@router.get("/", response_model=src.schemas.user_schema.UserInfo, status_code=fastapi.status.HTTP_200_OK)
+@router.get("", response_model=src.schemas.user_schema.UserInfo, status_code=fastapi.status.HTTP_200_OK)
 def get_user_info(user_id: int = fastapi.Depends(src.utils.get_current_user), db: sqlalchemy.orm.Session = fastapi.Depends(src.database.get_db)):
   return src.crud.user_crud.get_user(user_id, db)
 

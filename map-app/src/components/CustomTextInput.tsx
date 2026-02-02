@@ -28,7 +28,7 @@ export function CustomTextInput({error, label, leftIcon, maxLength, multiline, o
         {leftIcon &&
           <Ionicons
             name={leftIcon}
-            size={24}
+            size={16}
             style={styles.leftIcon}
           />
         }
