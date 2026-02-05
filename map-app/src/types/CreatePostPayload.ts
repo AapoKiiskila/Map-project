@@ -4,5 +4,4 @@ export type CreatePostPayload = {
   type: string
   latitude: number
   longitude: number
-  user_id: number
 }

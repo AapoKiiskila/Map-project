@@ -16,9 +16,9 @@ def fetch_all_posts(user_id: int = fastapi.Depends(src.utils.get_current_user), 
   return src.crud.post_crud.get_all_posts(user_id, latitude, longitude, db)
 
 @router.get("/{post_id}", response_model=src.schemas.post_schema.PostFetchOnePost, status_code=fastapi.status.HTTP_200_OK)
-def fetch_one_post(post_id: int, db: sqlalchemy.orm.Session = fastapi.Depends(src.database.get_db)):
+def fetch_one_post(post_id: int, user_id: int = fastapi.Depends(src.utils.get_current_user), db: sqlalchemy.orm.Session = fastapi.Depends(src.database.get_db)):
   return src.crud.post_crud.get_one_post(post_id, db)
 
 @router.post("/create-post", status_code=fastapi.status.HTTP_201_CREATED)
-def create_new_post(new_post: src.schemas.post_schema.PostCreate, db: sqlalchemy.orm.Session = fastapi.Depends(src.database.get_db)):
-  return src.crud.post_crud.create_post(new_post, db)
+def create_new_post(new_post: src.schemas.post_schema.PostCreate, user_id: int = fastapi.Depends(src.utils.get_current_user), db: sqlalchemy.orm.Session = fastapi.Depends(src.database.get_db)):
+  return src.crud.post_crud.create_post(new_post, user_id, db)

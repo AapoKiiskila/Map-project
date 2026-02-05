@@ -22,7 +22,6 @@ class PostCreate(pydantic.BaseModel):
   type: str
   latitude: decimal.Decimal
   longitude: decimal.Decimal
-  user_id: int
 
 class PostFetchUserPosts(pydantic.BaseModel):
   id: int

@@ -5,13 +5,14 @@ import { CustomTextInput } from "../../../../components/CustomTextInput"
 import { CreatePostPayload } from "../../../../types/CreatePostPayload"
 import { Keyboard, Pressable, StyleSheet, View } from "react-native"
 import { LoadingModal } from "../../../../components/LoadingModal"
-import React, { useState } from "react"
+import React, { useState, useContext } from "react"
 import { SegmentedButtons } from "react-native-paper"
 import { SuccessResponse } from "../../../../types/SuccessResponse"
 import { TextInputInfoText } from "../../../../components/TextInputInfoText"
 import { useLocalSearchParams } from "expo-router"
 import { useRouter } from "expo-router"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { UserContext } from "../../../../context/UserContext"
 
 export default function CreatePostScreen() {
   const {latitude, longitude} = useLocalSearchParams<{latitude: string, longitude: string}>()
@@ -20,9 +21,9 @@ export default function CreatePostScreen() {
 
   const insets = useSafeAreaInsets()
   const router = useRouter()
+  const {token} = useContext(UserContext)
 
   const URL = config.URL
-  const userId: number = 1  // Hardcoded for testing purposes
 
   const [title, setTitle] = useState<string>("")
   const [titleError, setTitleError] = useState<boolean>(false)
@@ -90,13 +91,12 @@ export default function CreatePostScreen() {
       type: type,
       latitude: lat,
       longitude: lon,
-      user_id: userId,
     }
 
     try {
       const response = await fetch(`${URL}/posts/create-post`, {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
+        headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
         body: JSON.stringify(payload)
       })
 

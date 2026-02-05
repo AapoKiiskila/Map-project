@@ -7,11 +7,12 @@ import Ionicons from "@expo/vector-icons/Ionicons"
 import { LoadingModal } from "../../../../../../components/LoadingModal"
 import { LocalDateAndTime } from "../../../../../../components/LocalDateAndTime"
 import { PostScreenData } from "../../../../../../types/PostScreenData"
-import React, { useCallback, useEffect, useState} from "react"
+import React, { useCallback, useContext, useEffect, useState} from "react"
 import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native"
 import { useFocusEffect } from "@react-navigation/native"
 import { useLocalSearchParams } from "expo-router"
 import { useNavigation } from "@react-navigation/native"
+import { UserContext } from "../../../../../../context/UserContext"
 import { useRouter } from "expo-router"
 import { SuccessResponse } from "../../../../../../types/SuccessResponse"
 
@@ -22,9 +23,9 @@ export default function PostScreen() {
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
   const router = useRouter()
+  const {token, user} = useContext(UserContext)
 
   const URL = config.URL
-  const userId: number = 1  // Hardcoded for testing purposes
 
   const [postDetails, setPostDetails] = useState<PostScreenData | null>(null)
   const [errorMessage, setErrorMessage] = useState<string>("")
@@ -38,7 +39,7 @@ export default function PostScreen() {
   useEffect(() => {
     navigation.setOptions({
       headerRight: 
-        userId === postDetails?.user_id ?
+        user?.id === postDetails?.user_id ?
           () => (
             <Pressable 
               onPress={() => setShowConfirmAlert(true)} 
@@ -65,7 +66,7 @@ export default function PostScreen() {
     try {
       const response = await fetch(`${URL}/posts/${postId}`, {
         method: "GET",
-        headers: {"Content-Type": "application/json"},
+        headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
       })
       
       if (response.ok) {
@@ -90,12 +91,12 @@ export default function PostScreen() {
   const navigateToScreen = (): void =>{
     setIsPressed(true)
 
-    if (postDetails?.user_id === userId) {
+    if (postDetails?.user_id === user?.id) {
       router.push({
         pathname: `post/${postId}/edit-post`,
         params: {
-          title: postDetails.title, 
-          details: postDetails.details, 
+          title: postDetails?.title, 
+          details: postDetails?.details, 
           type: type
         }
       })
@@ -112,9 +113,9 @@ export default function PostScreen() {
     setIsLoading(true)
 
     try {
-      const response = await fetch(`${URL}/users/${userId}/posts/${postId}`, {
+      const response = await fetch(`${URL}/users/${user?.id}/posts/${postId}`, {
         method: "DELETE",
-        headers: {"Content-Type": "application/json"},
+        headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
       })
       
       if (response.ok) {
@@ -163,7 +164,7 @@ export default function PostScreen() {
             <CustomButton 
               disabled={isPressed} 
               onPress={navigateToScreen} 
-              label={postDetails.user_id === userId ? "Edit" : "Reply"}
+              label={postDetails.user_id === user?.id ? "Edit" : "Reply"}
             />
           </View>
         </>

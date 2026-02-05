@@ -37,8 +37,8 @@ def get_one_post(post_id: int, db: sqlalchemy.orm.Session):
   
   return post
 
-def create_post(new_post: src.schemas.post_schema.PostCreate, db: sqlalchemy.orm.Session):
-  user = db.query(src.models.User).filter(src.models.User.id == new_post.user_id).first()
+def create_post(new_post: src.schemas.post_schema.PostCreate, user_id: int, db: sqlalchemy.orm.Session):
+  user = db.query(src.models.User).filter(src.models.User.id == user_id).first()
 
   if not user:
     raise fastapi.HTTPException(status_code=fastapi.status.HTTP_404_NOT_FOUND, detail="User not found")
@@ -61,7 +61,7 @@ def create_post(new_post: src.schemas.post_schema.PostCreate, db: sqlalchemy.orm
     type=new_post.type,
     latitude=new_post.latitude,
     longitude=new_post.longitude,
-    user_id=new_post.user_id
+    user_id=user_id
   )
 
   db.add(db_post)
