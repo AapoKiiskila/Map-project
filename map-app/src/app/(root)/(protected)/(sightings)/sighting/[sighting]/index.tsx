@@ -6,7 +6,7 @@ import { ErrorResponse } from "../../../../../../types/ErrorResponse"
 import Ionicons from "@expo/vector-icons/Ionicons"
 import { LoadingModal } from "../../../../../../components/LoadingModal"
 import { LocalDateAndTime } from "../../../../../../components/LocalDateAndTime"
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native"
+import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native"
 import React, { useEffect, useState } from "react"
 import { SuccessResponse } from "../../../../../../types/SuccessResponse"
 import { UpdateIsRead } from "../../../../../../types/UpdateIsRead"
@@ -42,7 +42,7 @@ export default function SightingScreen() {
             <Pressable 
               onPress={() => setShowConfirmAlert(true)} 
               style={({pressed}) => [
-                styles.icon,
+                Platform.OS === "ios" ? styles.icon : undefined,
                 pressed && styles.iconPressed
               ]}
             >
@@ -156,7 +156,7 @@ export default function SightingScreen() {
 
 const styles = StyleSheet.create({
   icon: {
-    marginRight: 10,
+    paddingHorizontal: 10,
   },
   iconPressed: {
     opacity: 0.2,

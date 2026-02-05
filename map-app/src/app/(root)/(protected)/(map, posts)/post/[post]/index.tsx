@@ -8,7 +8,7 @@ import { LoadingModal } from "../../../../../../components/LoadingModal"
 import { LocalDateAndTime } from "../../../../../../components/LocalDateAndTime"
 import { PostScreenData } from "../../../../../../types/PostScreenData"
 import React, { useCallback, useEffect, useState} from "react"
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native"
+import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native"
 import { useFocusEffect } from "@react-navigation/native"
 import { useLocalSearchParams } from "expo-router"
 import { useNavigation } from "@react-navigation/native"
@@ -43,7 +43,7 @@ export default function PostScreen() {
             <Pressable 
               onPress={() => setShowConfirmAlert(true)} 
               style={({pressed}) => [
-                styles.icon,
+                Platform.OS === "ios" ? styles.icon : undefined,
                 pressed && styles.iconPressed
               ]}
             >
@@ -198,7 +198,7 @@ export default function PostScreen() {
 
 const styles = StyleSheet.create({
   icon: {
-    marginRight: 10,
+    paddingHorizontal: 10,
   },
   iconPressed: {
     opacity: 0.2,

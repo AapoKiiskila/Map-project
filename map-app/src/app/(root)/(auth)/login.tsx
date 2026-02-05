@@ -3,7 +3,7 @@ import { ErrorResponse } from "../../../types/ErrorResponse"
 import { CustomButton } from "../../../components/CustomButton"
 import { CustomTextInput } from "../../../components/CustomTextInput"
 import { isStrongPassword } from "validator"
-import { Keyboard, Pressable, StyleSheet, Text, View } from "react-native"
+import { Keyboard, Platform, Pressable, StyleSheet, Text, View } from "react-native"
 import { LoadingModal } from "../../../components/LoadingModal"
 import { matches } from "validator"
 import { TextInputInfoText } from "../../../components/TextInputInfoText"
@@ -111,7 +111,7 @@ export default function LoginScreen() {
   }
   
   return(
-    <Pressable style={[styles.mainContainer, {paddingTop: headerHeight / 3}]} onPress={Keyboard.dismiss}>
+    <Pressable style={[styles.mainContainer, Platform.OS === "ios" ? {paddingTop: headerHeight / 3} : {paddingTop: headerHeight / 6}]} onPress={Keyboard.dismiss}>
       <View style={styles.usernameContainer}>
         <CustomTextInput 
           error={usernameError}
