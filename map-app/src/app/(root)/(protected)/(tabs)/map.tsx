@@ -3,22 +3,23 @@ import { LoadingModal } from "../../../../components/LoadingModal"
 import MapView, { LatLng, LongPressEvent, Marker }  from "react-native-maps"
 import { Modal, Platform,  Pressable, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native"
 import { PostMarker } from "../../../../types/PostMarker"
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useContext, useState } from "react"
 import { useFocusEffect } from "@react-navigation/native"
 import useLocation from "../../../../hooks/useLocation"
 import { useRouter } from "expo-router"
+import { UserContext } from "../../../../context/UserContext"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 export default function MapScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
+  const {token, user} = useContext(UserContext)
   const {userLocation, userLocationFound} = useLocation()
 
   const URL = config.URL
-  const userId: number = 1  // Hardcoded for testing purposes
 
   const [userMarker, setUserMarker] = useState<LatLng | null>(null)
-  const [markers, setMarkers] = useState<PostMarker[] | null>(null)
+  const [markers, setMarkers] = useState<PostMarker[]>([])
   const [limitError, setLimitError] = useState<boolean>(false)
   const [fetchError, setFetchError] = useState<boolean>(false)
   const [showFetchError, setShowFetchError] = useState<boolean>(false)
@@ -41,9 +42,9 @@ export default function MapScreen() {
     setFetching(true)
 
     try {
-      const response = await fetch(`${URL}/posts?id=${userId}&latitude=${userLocation.latitude}&longitude=${userLocation.longitude}`, {
+      const response = await fetch(`${URL}/posts?id=${user?.id}&latitude=${userLocation.latitude}&longitude=${userLocation.longitude}`, {
         method: "GET",
-        headers: {"Content-Type": "application/json"},
+        headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
       })
     
       if (response.ok) {
@@ -67,7 +68,7 @@ export default function MapScreen() {
       return
     }
 
-    const userPosts: PostMarker[] = markers?.filter((marker) => marker.user_id === userId) ?? []
+    const userPosts: PostMarker[] = markers.filter((marker) => marker.user_id === user?.id) ?? []
     const userPostCount: number = userPosts.length
 
     if (3 <= userPostCount) {
@@ -137,7 +138,7 @@ export default function MapScreen() {
             coordinate={{latitude: Number(marker.latitude), longitude: Number(marker.longitude)}}
             onPress={() => navigateToPost(marker.id, marker.type)}
             pinColor={
-              marker.user_id === userId ? "rgba(255, 0, 0, 1)"
+              marker.user_id === user?.id ? "rgba(255, 0, 0, 1)"
               : marker.type === "Animal" ? "rgba(255, 196, 0, 1)"
               : "rgba(0, 60, 255, 1)"
             }
