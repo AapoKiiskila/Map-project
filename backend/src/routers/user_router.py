@@ -21,8 +21,8 @@ def create_new_user(new_user: src.schemas.user_schema.UserCreate, db: sqlalchemy
 def get_user_info(user_id: int = fastapi.Depends(src.utils.get_current_user), db: sqlalchemy.orm.Session = fastapi.Depends(src.database.get_db)):
   return src.crud.user_crud.get_user(user_id, db)
 
-@router.put("/{user_id}/update-username", response_model=src.schemas.user_schema.UserUpdateUsernameResponse, status_code=fastapi.status.HTTP_200_OK)
-def change_new_username(user_id: int, new_username: src.schemas.user_schema.UserUpdateUsername, db: sqlalchemy.orm.Session = fastapi.Depends(src.database.get_db)):
+@router.put("/update-username", response_model=src.schemas.user_schema.UserUpdateUsernameResponse, status_code=fastapi.status.HTTP_200_OK)
+def change_new_username(new_username: src.schemas.user_schema.UserUpdateUsername, user_id: int = fastapi.Depends(src.utils.get_current_user), db: sqlalchemy.orm.Session = fastapi.Depends(src.database.get_db)):
   return src.crud.user_crud.change_username(user_id, new_username, db)
 
 @router.put("/{user_id}/update-email", response_model=src.schemas.user_schema.UserUpdateEmailResponse, status_code=fastapi.status.HTTP_200_OK)

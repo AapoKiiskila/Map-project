@@ -42,7 +42,7 @@ export default function MapScreen() {
     setFetching(true)
 
     try {
-      const response = await fetch(`${URL}/posts?id=${user?.id}&latitude=${userLocation.latitude}&longitude=${userLocation.longitude}`, {
+      const response = await fetch(`${URL}/posts?id=${user.id}&latitude=${userLocation.latitude}&longitude=${userLocation.longitude}`, {
         method: "GET",
         headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
       })
@@ -68,7 +68,7 @@ export default function MapScreen() {
       return
     }
 
-    const userPosts: PostMarker[] = markers.filter((marker) => marker.user_id === user?.id) ?? []
+    const userPosts: PostMarker[] = markers.filter((marker) => marker.user_id === user.id) ?? []
     const userPostCount: number = userPosts.length
 
     if (3 <= userPostCount) {
@@ -138,7 +138,7 @@ export default function MapScreen() {
             coordinate={{latitude: Number(marker.latitude), longitude: Number(marker.longitude)}}
             onPress={() => navigateToPost(marker.id, marker.type)}
             pinColor={
-              marker.user_id === user?.id ? "rgba(255, 0, 0, 1)"
+              marker.user_id === user.id ? "rgba(255, 0, 0, 1)"
               : marker.type === "Animal" ? "rgba(255, 196, 0, 1)"
               : "rgba(0, 60, 255, 1)"
             }

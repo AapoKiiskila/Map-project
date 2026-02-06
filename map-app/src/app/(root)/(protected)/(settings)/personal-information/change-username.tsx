@@ -5,18 +5,20 @@ import { CustomTextInput } from "../../../../../components/CustomTextInput"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Keyboard, KeyboardAvoidingView, Platform, Pressable, StyleSheet, View } from "react-native"
 import { LoadingModal } from "../../../../../components/LoadingModal"
-import React, { useState, useEffect } from "react"
+import { matches } from "validator"
+import React, { useState, useEffect, useContext } from "react"
 import { SuccessfulUsernameChange } from "../../../../../types/SuccessfulUsernameChange"
 import { TextInputInfoText } from "../../../../../components/TextInputInfoText"
 import { UpdateUsernamePayload } from "../../../../../types/UpdateUsernamePayload"
+import { UserContext } from "../../../../../context/UserContext"
 import { useRouter } from "expo-router"
 
 export default function ChangeUsernameScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
+  const {setUser, token, user} = useContext(UserContext)
 
   const URL = config.URL
-  const userId: number = 1  // Hardcoded for testing purposes
 
   const [newUsername, setNewUsername] = useState<string>("")
   const [newUsernameError, setNewUsernameError] = useState<boolean>(false)
@@ -41,26 +43,25 @@ export default function ChangeUsernameScreen() {
     }
   }, [])
 
-  const checkNewUsername = (): void => {
-    if (!newUsername || newUsername.trim() === "" || newUsername.length <= 2) {
-      setNewUsernameError(true)
-    } else {
-      setNewUsernameError(false)
-    }
-  }
-
   const changeNewUsername = (text: string): void => {
-    if (!text || text.trim() === "" || text.length <= 2) {
-      setNewUsernameError(true)
-    } else {
-      setNewUsernameError(false)
-    }
-    
+    setNewUsernameError(false)
     setNewUsername(text)
   }
 
   const changeUsername = async (): Promise<void> => {
+    let credentialsError: boolean = false
     setIsSubmitted(true)
+
+    if (!matches(newUsername, "^[a-zA-Z0-9_\.\-]*$") || newUsername.length <= 2 || newUsername === user.username) {
+      credentialsError = true
+      setNewUsernameError(true)
+    }
+
+    if (credentialsError) {
+      setIsSubmitted(false)
+      return
+    }
+    
     setIsLoading(true)
 
     const payload: UpdateUsernamePayload = {
@@ -68,16 +69,16 @@ export default function ChangeUsernameScreen() {
     }
     
     try {
-      const response = await fetch(`${URL}/users/${userId}/update-username`, {
+      const response = await fetch(`${URL}/users/update-username`, {
         method: "PUT",
-        headers: {"Content-Type": "application/json"},
+        headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
         body: JSON.stringify(payload)
       })
     
       if (response.ok) {
         const data: SuccessfulUsernameChange = await response.json()
         setAlertMessage(data.message)
-        console.log(data.username)
+        setUser({...user, username: data.username})
       } else {
         const errorData: ErrorResponse = await response.json()
         setErrorMessage(errorData.detail)
@@ -106,7 +107,6 @@ export default function ChangeUsernameScreen() {
             placeholder="Enter a new username"
             value={newUsername} 
             onChangeText={changeNewUsername}
-            onBlur={checkNewUsername}
           />
           <TextInputInfoText 
             error={newUsernameError} 

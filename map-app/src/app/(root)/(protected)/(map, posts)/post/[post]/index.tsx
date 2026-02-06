@@ -39,7 +39,7 @@ export default function PostScreen() {
   useEffect(() => {
     navigation.setOptions({
       headerRight: 
-        user?.id === postDetails?.user_id ?
+        user.id === postDetails?.user_id ?
           () => (
             <Pressable 
               onPress={() => setShowConfirmAlert(true)} 
@@ -91,12 +91,12 @@ export default function PostScreen() {
   const navigateToScreen = (): void =>{
     setIsPressed(true)
 
-    if (postDetails?.user_id === user?.id) {
+    if (postDetails?.user_id === user.id) {
       router.push({
         pathname: `post/${postId}/edit-post`,
         params: {
-          title: postDetails?.title, 
-          details: postDetails?.details, 
+          title: postDetails.title, 
+          details: postDetails.details, 
           type: type
         }
       })
@@ -164,7 +164,7 @@ export default function PostScreen() {
             <CustomButton 
               disabled={isPressed} 
               onPress={navigateToScreen} 
-              label={postDetails.user_id === user?.id ? "Edit" : "Reply"}
+              label={postDetails.user_id === user.id ? "Edit" : "Reply"}
             />
           </View>
         </>

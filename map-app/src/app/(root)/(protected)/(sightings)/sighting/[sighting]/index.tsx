@@ -35,10 +35,10 @@ export default function SightingScreen() {
 
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: user?.id === userIdNumber ? "Your sighting" : username,
+      headerTitle: user.id === userIdNumber ? "Your sighting" : username,
 
       headerRight: 
-        user?.id === userIdNumber ?
+        user.id === userIdNumber ?
           () => (
             <Pressable 
               onPress={() => setShowConfirmAlert(true)} 
@@ -53,7 +53,7 @@ export default function SightingScreen() {
         : null
     })
 
-    if ((isReadByUser === 0) && (user?.id !== userIdNumber)) {
+    if ((isReadByUser === 0) && (user.id !== userIdNumber)) {
       markAsRead()
     }
   }, [navigation])

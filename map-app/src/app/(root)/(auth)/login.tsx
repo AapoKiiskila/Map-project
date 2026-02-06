@@ -82,18 +82,19 @@ export default function LoginScreen() {
 
         if (secondResponse.ok) {
           const secondData: UserInfoResponse = await secondResponse.json()
+          console.log(secondData)
           setUser({id: secondData.id, username: secondData.username, email: secondData.email})
         } else {
           const secondErrorData: ErrorResponse = await secondResponse.json()
           setErrorMessage(secondErrorData.detail)
-          setUser(null)
+          setUser({id: 0, username: "", email: ""})
           setToken("")
         }
         
       } else {
         const errorData: ErrorResponse = await response.json()
         setErrorMessage(errorData.detail)
-        setUser(null)
+        setUser({id: 0, username: "", email: ""})
         setToken("")
       }
     } 

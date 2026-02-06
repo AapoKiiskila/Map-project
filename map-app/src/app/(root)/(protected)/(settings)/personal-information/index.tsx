@@ -1,16 +1,18 @@
-import React from "react"
+import React, { useContext } from "react"
 import { SettingsButton } from "../../../../../components/SettingsButton"
 import { StyleSheet, View } from "react-native"
 import { useRouter } from "expo-router"
+import { UserContext } from "../../../../../context/UserContext"
 
 export default function PersonalInformationScreen() {
   const router = useRouter()
+  const {user} = useContext(UserContext)
 
   return(
     <View style={styles.container}>
       <View style={styles.contentContainer}>
-        <SettingsButton onPress={() => router.push("/personal-information/change-username")} extraText="Placeholder" text="Username" />
-        <SettingsButton onPress={() => router.push("/personal-information/change-email")} extraText="placeholder@gmail.com" text="Email" />
+        <SettingsButton onPress={() => router.push("/personal-information/change-username")} extraText={user.username} text="Username" />
+        <SettingsButton onPress={() => router.push("/personal-information/change-email")} extraText={user.email} text="Email" />
         <SettingsButton onPress={() => {}} extraText="********" text="Password" />
       </View>
     </View>
