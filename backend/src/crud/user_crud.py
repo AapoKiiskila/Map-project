@@ -1,6 +1,5 @@
 import fastapi
 import src.models
-import src.schemas.post_schema
 import src.schemas.user_schema
 import sqlalchemy
 import sqlalchemy.orm
@@ -95,27 +94,3 @@ def change_email(user_id: int, new_email: src.schemas.user_schema.UserUpdateEmai
   db.commit()
 
   return{"message": "Email address has been changed", "email": new_email.email}
-
-def update_post(user_id: int, post_id: str, update_data: src.schemas.post_schema.PostUpdate, db: sqlalchemy.orm.Session):
-  user = db.query(src.models.User).filter(src.models.User.id == user_id).first()
-
-  if not user:
-    raise fastapi.HTTPException(status_code=fastapi.status.HTTP_404_NOT_FOUND, detail="User not found")
-  
-  post = db.query(src.models.Post).filter(src.models.Post.id == post_id).first()
-
-  if not post:
-    raise fastapi.HTTPException(status_code=fastapi.status.HTTP_404_NOT_FOUND, detail="Post not found")
-  
-  if update_data.title:
-    post.title = update_data.title
-
-  if update_data.details:
-    post.details = update_data.details
-
-  if update_data.type:
-    post.type = update_data.type
-
-  db.commit()
-
-  return {"message": "Post has been updated"}

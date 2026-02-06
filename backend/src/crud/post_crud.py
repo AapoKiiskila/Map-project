@@ -94,3 +94,27 @@ def get_user_posts(user_id: int, db: sqlalchemy.orm.Session):
   posts = db.query(src.models.Post).filter(src.models.Post.user_id == user_id).order_by(src.models.Post.time_created.desc()).all()
 
   return posts
+
+def update_post(user_id: int, post_id: str, update_data: src.schemas.post_schema.PostUpdate, db: sqlalchemy.orm.Session):
+  user = db.query(src.models.User).filter(src.models.User.id == user_id).first()
+
+  if not user:
+    raise fastapi.HTTPException(status_code=fastapi.status.HTTP_404_NOT_FOUND, detail="User not found")
+  
+  post = db.query(src.models.Post).filter(src.models.Post.id == post_id).first()
+
+  if not post:
+    raise fastapi.HTTPException(status_code=fastapi.status.HTTP_404_NOT_FOUND, detail="Post not found")
+  
+  if update_data.title:
+    post.title = update_data.title
+
+  if update_data.details:
+    post.details = update_data.details
+
+  if update_data.type:
+    post.type = update_data.type
+
+  db.commit()
+
+  return {"message": "Post has been updated"}

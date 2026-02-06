@@ -42,7 +42,7 @@ export default function MapScreen() {
     setFetching(true)
 
     try {
-      const response = await fetch(`${URL}/posts?id=${user.id}&latitude=${userLocation.latitude}&longitude=${userLocation.longitude}`, {
+      const response = await fetch(`${URL}/posts?latitude=${userLocation.latitude}&longitude=${userLocation.longitude}`, {
         method: "GET",
         headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
       })

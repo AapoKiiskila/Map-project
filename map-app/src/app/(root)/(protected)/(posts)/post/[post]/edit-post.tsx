@@ -5,11 +5,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { ErrorResponse } from "../../../../../../types/ErrorResponse"
 import { Keyboard, Pressable, StyleSheet, View } from "react-native"
 import { LoadingModal } from "../../../../../../components/LoadingModal"
-import React, { useState} from "react"
+import React, { useContext, useState} from "react"
 import { SegmentedButtons } from "react-native-paper"
 import { SuccessResponse } from "../../../../../../types/SuccessResponse"
 import { TextInputInfoText } from "../../../../../../components/TextInputInfoText"
 import { useLocalSearchParams } from "expo-router"
+import { UserContext } from "../../../../../../context/UserContext"
 import { useRouter } from "expo-router"
 import { UpdatePostPayload } from "../../../../../../types/UpdatePostPayload"
 
@@ -19,9 +20,9 @@ export default function EditPostScreen() {
 
   const insets = useSafeAreaInsets()
   const router = useRouter()
+  const {token} = useContext(UserContext)
 
   const URL = config.URL
-  const userId: number = 1  // Hardcoded for testing purposes
 
   const [newTitle, setNewTitle] = useState<string>(title)
   const [newDetails, setNewDetails] = useState<string>(details)
@@ -90,9 +91,9 @@ export default function EditPostScreen() {
     }
 
     try {
-      const response = await fetch(`${URL}/users/${userId}/posts/${postId}`, {
+      const response = await fetch(`${URL}/posts/${postId}`, {
         method: "PUT",
-        headers: {"Content-Type": "application/json"},
+        headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
         body: JSON.stringify(payload)
       })
 
