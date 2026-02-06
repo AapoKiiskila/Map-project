@@ -94,3 +94,20 @@ def change_email(user_id: int, new_email: src.schemas.user_schema.UserUpdateEmai
   db.commit()
 
   return{"message": "Email address has been changed", "email": new_email.email}
+
+def change_password(user_id: int, new_password: src.schemas.user_schema.UserUpdatePassword, db: sqlalchemy.orm.Session):
+  user = db.query(src.models.User).filter(src.models.User.id == user_id).first()
+
+  if not user:
+    raise fastapi.HTTPException(status_code=fastapi.status.HTTP_404_NOT_FOUND, detail="User not found")
+  
+  if not new_password:
+    raise fastapi.HTTPException(status_code=fastapi.status.HTTP_400_BAD_REQUEST, detail="Enter a valid password")
+  
+  new_hashed_password = src.utils.hash_password(new_password.password)
+  
+  user.hashed_password = new_hashed_password
+
+  db.commit()
+
+  return{"message": "Password has been changed"}

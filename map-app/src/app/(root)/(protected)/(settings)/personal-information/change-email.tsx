@@ -103,7 +103,8 @@ export default function ChangeEmailScreen() {
         <View style={styles.upperContent}>
           <CustomTextInput
             error={newEmailError}
-            label="New email address" 
+            label="New email address"
+            leftIcon="at"
             placeholder="Enter a new email address"
             value={newEmail} 
             onChangeText={changeNewEmail}

@@ -3,25 +3,25 @@ import { ErrorResponse } from "../../../../../types/ErrorResponse"
 import { CustomButton } from "../../../../../components/CustomButton"
 import { CustomTextInput } from "../../../../../components/CustomTextInput"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { isStrongPassword } from "validator"
 import { Keyboard, KeyboardAvoidingView, Platform, Pressable, StyleSheet, View } from "react-native"
 import { LoadingModal } from "../../../../../components/LoadingModal"
-import { matches } from "validator"
 import React, { useState, useEffect, useContext } from "react"
 import { SuccessfulUsernameChange } from "../../../../../types/SuccessfulUsernameChange"
 import { TextInputInfoText } from "../../../../../components/TextInputInfoText"
-import { UpdateUsernamePayload } from "../../../../../types/UpdateUsernamePayload"
+import { UpdatePasswordPayload } from "../../../../../types/UpdatePasswordPayload"
 import { UserContext } from "../../../../../context/UserContext"
 import { useRouter } from "expo-router"
 
-export default function ChangeUsernameScreen() {
+export default function ChangePasswordScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
-  const {setUser, token, user} = useContext(UserContext)
+  const {token} = useContext(UserContext)
 
   const URL = config.URL
 
-  const [newUsername, setNewUsername] = useState<string>("")
-  const [newUsernameError, setNewUsernameError] = useState<boolean>(false)
+  const [newPassword, setNewPassword] = useState<string>("")
+  const [newPasswordError, setNewPasswordError] = useState<boolean>(false)
   const [behaviour, setBehaviour] = useState<"height" | undefined>("height")
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -43,18 +43,18 @@ export default function ChangeUsernameScreen() {
     }
   }, [])
 
-  const changeNewUsername = (text: string): void => {
-    setNewUsernameError(false)
-    setNewUsername(text)
+  const changeNewPassword = (text: string): void => {
+    setNewPasswordError(false)
+    setNewPassword(text)
   }
 
-  const changeUsername = async (): Promise<void> => {
+  const changePassword = async (): Promise<void> => {
     let credentialsError: boolean = false
     setIsSubmitted(true)
 
-    if (!matches(newUsername, "^[a-zA-Z0-9_\.\-]*$") || newUsername.length <= 2 || newUsername === user.username) {
+    if (!isStrongPassword(newPassword, {minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 0})) {
       credentialsError = true
-      setNewUsernameError(true)
+      setNewPasswordError(true)
     }
 
     if (credentialsError) {
@@ -64,12 +64,12 @@ export default function ChangeUsernameScreen() {
     
     setIsLoading(true)
 
-    const payload: UpdateUsernamePayload = {
-      username: newUsername
+    const payload: UpdatePasswordPayload = {
+      password: newPassword
     }
     
     try {
-      const response = await fetch(`${URL}/users/update-username`, {
+      const response = await fetch(`${URL}/users/update-password`, {
         method: "PUT",
         headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
         body: JSON.stringify(payload)
@@ -78,7 +78,6 @@ export default function ChangeUsernameScreen() {
       if (response.ok) {
         const data: SuccessfulUsernameChange = await response.json()
         setAlertMessage(data.message)
-        setUser({...user, username: data.username})
       } else {
         const errorData: ErrorResponse = await response.json()
         setErrorMessage(errorData.detail)
@@ -101,27 +100,25 @@ export default function ChangeUsernameScreen() {
       <Pressable style={styles.container} onPress={Keyboard.dismiss}>
         <View style={styles.upperContent}>
           <CustomTextInput
-            error={newUsernameError}
-            label="New username" 
-            leftIcon="person-outline"
-            maxLength={50} 
-            placeholder="Enter a new username"
-            value={newUsername} 
-            onChangeText={changeNewUsername}
+            error={newPasswordError}
+            label="New password"
+            leftIcon="lock-closed-outline"
+            onChangeText={changeNewPassword}
+            placeholder="Enter a new password"
+            textType="password"
+            value={newPassword}
           />
           <TextInputInfoText 
-            error={newUsernameError} 
-            errorMessage="Enter a valid username" 
-            style={{marginTop: 4}} 
-            textLimit={50} 
-            word={newUsername} 
+            error={newPasswordError} 
+            errorMessage="Enter a valid password" 
+            style={{marginTop: 4}}  
           />
         </View>
         <View style={[styles.lowerContent, {paddingBottom: insets.bottom}]}>
           <CustomButton 
-            disabled={!newUsername || newUsernameError || isSubmitted}
+            disabled={!newPassword || newPasswordError || isSubmitted}
             label="Submit" 
-            onPress={changeUsername} 
+            onPress={changePassword} 
           />
         </View>
 

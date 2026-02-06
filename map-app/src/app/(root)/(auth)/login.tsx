@@ -116,7 +116,7 @@ export default function LoginScreen() {
         <CustomTextInput 
           error={usernameError}
           label="Username"
-          leftIcon="person"
+          leftIcon="person-outline"
           maxLength={50}
           onChangeText={changeUsername}
           placeholder="Enter your username"
@@ -134,7 +134,7 @@ export default function LoginScreen() {
         <CustomTextInput 
           error={passwordError}
           label="Password"
-          leftIcon="lock-closed"
+          leftIcon="lock-closed-outline"
           onChangeText={changePassword}
           placeholder="Enter your password"
           textType="password"

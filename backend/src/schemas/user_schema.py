@@ -14,6 +14,9 @@ class UserCreate(pydantic.BaseModel):
 class UserUpdateUsername(pydantic.BaseModel):
   username: str
 
+class UserUpdatePassword(pydantic.BaseModel):
+  password: str
+
 class UserUpdateUsernameResponse(pydantic.BaseModel):
   message: str
   username: str
