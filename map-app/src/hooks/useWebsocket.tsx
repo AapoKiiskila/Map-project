@@ -1,14 +1,16 @@
 import { config } from "../config"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
+import { UserContext } from "../context/UserContext"
 
 export default function useWebsocket() {
-  const userId: number = 1
+  const {user} = useContext(UserContext)
+
   const WS = config.WS
 
   const [unreadCount, setUnreadCount] = useState<number>(0)
 
   useEffect(() => {
-    const websocket = new WebSocket(`${WS}/ws/${userId}`)
+    const websocket = new WebSocket(`${WS}/ws/${user?.id}`)
 
     websocket.onmessage = (event) => {
       setUnreadCount(Number(event.data))

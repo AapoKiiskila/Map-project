@@ -4,12 +4,13 @@ import React, { useContext, useEffect } from "react"
 import { Tabs } from "expo-router"
 import { UnreadContext } from "../../../../context/UnreadContext"
 import { UnreadPostsCount } from "../../../../types/UnreadPostsCount"
+import { UserContext } from "../../../../context/UserContext"
 
 export default function Layout() {
   const {count, setCount} = useContext(UnreadContext)
+  const {token} = useContext(UserContext)
   
   const URL = config.URL
-  const userId: number = 1  // Hardcoded for testing purposesv
 
   useEffect(() => {
     fetchUnreadPostsCount()
@@ -17,9 +18,9 @@ export default function Layout() {
 
   const fetchUnreadPostsCount = async (): Promise<void> => {
     try {
-      const response = await fetch(`${URL}/users/${userId}/received-sightings/unread`, {
+      const response = await fetch(`${URL}/sightings/received-sightings/unread`, {
         method: "GET",
-        headers: {"Content-Type": "application/json"},
+        headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
       })
         
       if (response.ok) {

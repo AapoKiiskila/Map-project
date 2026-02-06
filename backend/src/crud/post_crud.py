@@ -69,7 +69,7 @@ def create_post(new_post: src.schemas.post_schema.PostCreate, user_id: int, db: 
 
   return {"message": "Post created successfully"}
 
-def delete_post(user_id: int, post_id: int, db: sqlalchemy.orm.Session):
+def delete_post(post_id: int, user_id: int, db: sqlalchemy.orm.Session):
   user = db.query(src.models.User).filter(src.models.User.id == user_id).first()
 
   if not user:
@@ -84,3 +84,13 @@ def delete_post(user_id: int, post_id: int, db: sqlalchemy.orm.Session):
   db.commit()
 
   return {"message": "The post has been permanently deleted"}
+
+def get_user_posts(user_id: int, db: sqlalchemy.orm.Session):
+  user = db.query(src.models.User).filter(src.models.User.id == user_id).first()
+
+  if not user:
+    raise fastapi.HTTPException(status_code=fastapi.status.HTTP_404_NOT_FOUND, detail="User not found")
+  
+  posts = db.query(src.models.Post).filter(src.models.Post.user_id == user_id).order_by(src.models.Post.time_created.desc()).all()
+
+  return posts

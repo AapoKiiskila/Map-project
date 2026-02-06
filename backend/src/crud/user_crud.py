@@ -96,66 +96,6 @@ def change_email(user_id: int, new_email: src.schemas.user_schema.UserUpdateEmai
 
   return{"message": "Email address has been changed", "email": new_email.email}
 
-def get_received_sightings(user_id: int, db: sqlalchemy.orm.Session):
-  user = db.query(src.models.User).filter(src.models.User.id == user_id).first()
-  
-  if not user:
-    raise fastapi.HTTPException(status_code=fastapi.status.HTTP_404_NOT_FOUND, detail="User not found")
-  
-  sightings = (
-    db.query(
-      src.models.Post.title,
-      src.models.Post.type,
-      src.models.Sighting.description,
-      src.models.Sighting.id,
-      src.models.Sighting.post_id,
-      src.models.Sighting.user_id,
-      src.models.Sighting.time_created,
-      src.models.Sighting.is_read,
-      src.models.User.username,
-    )
-    .join(src.models.Post, src.models.User.id == src.models.Post.user_id)
-    .join(src.models.Sighting, src.models.Post.id == src.models.Sighting.post_id)
-    .filter(src.models.Post.user_id == user_id)
-    .order_by(src.models.Sighting.time_created.desc())
-    .all()
-  )
-
-  return sightings
-
-def get_created_sightings(user_id, db: sqlalchemy.orm.Session):
-  user = db.query(src.models.User).filter(src.models.User.id == user_id).first()
-
-  if not user:
-    raise fastapi.HTTPException(status_code=fastapi.status.HTTP_404_NOT_FOUND, detail="User not found")
-  
-  sightings = (
-    db.query(
-      src.models.Post.title,
-      src.models.Sighting.description,
-      src.models.Sighting.id,
-      src.models.Sighting.post_id,
-      src.models.Sighting.user_id,
-      src.models.Sighting.time_created,
-    )
-    .join(src.models.Post, src.models.Sighting.post_id == src.models.Post.id)
-    .filter(src.models.Sighting.user_id == user_id)
-    .order_by(src.models.Sighting.time_created.desc())
-    .all()
-  )
-
-  return sightings
-
-def get_user_posts(user_id: int, db: sqlalchemy.orm.Session):
-  user = db.query(src.models.User).filter(src.models.User.id == user_id).first()
-
-  if not user:
-    raise fastapi.HTTPException(status_code=fastapi.status.HTTP_404_NOT_FOUND, detail="User not found")
-  
-  posts = db.query(src.models.Post).filter(src.models.Post.user_id == user_id).order_by(src.models.Post.time_created.desc()).all()
-
-  return posts
-
 def update_post(user_id: int, post_id: str, update_data: src.schemas.post_schema.PostUpdate, db: sqlalchemy.orm.Session):
   user = db.query(src.models.User).filter(src.models.User.id == user_id).first()
 
@@ -179,18 +119,3 @@ def update_post(user_id: int, post_id: str, update_data: src.schemas.post_schema
   db.commit()
 
   return {"message": "Post has been updated"}
-
-def get_unread_sightings_count(user_id: int, db: sqlalchemy.orm.Session):
-  user = db.query(src.models.User).filter(src.models.User.id == user_id).first()
-
-  if not user:
-    raise fastapi.HTTPException(status_code=fastapi.status.HTTP_404_NOT_FOUND, detail="User not found")
-  
-  count = (
-    db.query(sqlalchemy.func.count(src.models.Sighting.id))
-    .join(src.models.Post, src.models.Post.id == src.models.Sighting.post_id)
-    .filter(src.models.Post.user_id == user_id, src.models.Sighting.is_read == False)
-    .scalar()
-  )
-
-  return {"count": count}

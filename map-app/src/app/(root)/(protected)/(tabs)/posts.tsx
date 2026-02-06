@@ -5,15 +5,16 @@ import { Ionicons } from "@expo/vector-icons"
 import { LoadingModal } from "../../../../components/LoadingModal"
 import { LocalDateAndTime } from "../../../../components/LocalDateAndTime"
 import { MyPost } from "../../../../types/MyPost"
-import React, { useCallback, useState} from "react"
+import React, { useCallback, useContext, useState} from "react"
 import { useFocusEffect } from "@react-navigation/native"
+import { UserContext } from "../../../../context/UserContext"
 import { useRouter } from "expo-router"
 
 export default function PostsScreen() {
   const router = useRouter()
+  const {token} = useContext(UserContext)
 
   const URL = config.URL
-  const userId: number = 1  // Hardcoded for testing purposes
 
   const [posts, setPosts] = useState<MyPost[] | null>(null)
   const [errorMessage, setErrorMessage] = useState<string>("")
@@ -28,9 +29,9 @@ export default function PostsScreen() {
 
   const fetchMyPosts = async (): Promise<void> => {
     try {
-      const response = await fetch(`${URL}/users/${userId}/posts`, {
+      const response = await fetch(`${URL}/posts/my-posts`, {
         method: "GET",
-        headers: {"Content-Type": "application/json"},
+        headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
       })
         
       if (response.ok) {

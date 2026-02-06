@@ -9,15 +9,16 @@ import React, { useCallback, useContext, useEffect, useState} from "react"
 import { ReceivedSightingsData } from "../../../../types/ReceivedSightingsData"
 import { UnreadContext } from "../../../../context/UnreadContext"
 import { useFocusEffect, useNavigation } from "@react-navigation/native"
+import { UserContext } from "../../../../context/UserContext"
 import { useRouter } from "expo-router"
 
 export default function SightingsScreen() {
   const {count} = useContext(UnreadContext)
   const navigation = useNavigation()
   const router = useRouter()
+  const {token} = useContext(UserContext)
 
   const URL = config.URL
-  const userId: number = 1  // Hardcoded for testing purposes
 
   const [receivedSightings, setReceivedSightings] = useState<ReceivedSightingsData[] | null>(null)
   const [receivedSightingsError, setReceivedSightingsError] = useState<string>("")
@@ -56,9 +57,9 @@ export default function SightingsScreen() {
 
   const fetchReceivedSightings = async (): Promise<void> => {
     try {
-      const response = await fetch(`${URL}/users/${userId}/received-sightings`, {
+      const response = await fetch(`${URL}/sightings/received-sightings`, {
         method: "GET",
-        headers: {"Content-Type": "application/json"},
+        headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
       })
       
       if (response.ok) {
@@ -76,9 +77,9 @@ export default function SightingsScreen() {
 
   const fetchCreatedSightings = async (): Promise<void> => {
     try {
-      const response = await fetch(`${URL}/users/${userId}/created-sightings`, {
+      const response = await fetch(`${URL}/sightings/created-sightings`, {
         method: "GET",
-        headers: {"Content-Type": "application/json"},
+        headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
       })
       
       if (response.ok) {

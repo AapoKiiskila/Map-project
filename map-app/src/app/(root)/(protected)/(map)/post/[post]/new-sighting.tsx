@@ -6,11 +6,12 @@ import { CustomTextInput } from "../../../../../../components/CustomTextInput"
 import { CreateSightingPayload } from "../../../../../../types/CreateSightingPayload"
 import { Keyboard, KeyboardAvoidingView, Platform, Pressable, StyleSheet, View } from "react-native"
 import { LoadingModal } from "../../../../../../components/LoadingModal"
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { SuccessResponse } from "../../../../../../types/SuccessResponse"
 import { TextInputInfoText } from "../../../../../../components/TextInputInfoText"
 import { useLocalSearchParams } from "expo-router"
 import { useRouter } from "expo-router"
+import { UserContext } from "../../../../../../context/UserContext"
 
 export default function NewSightingScreen() {
   const {post} = useLocalSearchParams<{post: string}>()
@@ -18,9 +19,9 @@ export default function NewSightingScreen() {
 
   const insets = useSafeAreaInsets()
   const router = useRouter()
+  const {token} = useContext(UserContext)
 
   const URL = config.URL
-  const userId: number = 1  // Hardcoded for testing purposes
 
   const [description, setDescription] = useState<string>("")
   const [descriptionError, setDescriptionError] = useState<boolean>(false)
@@ -69,14 +70,13 @@ export default function NewSightingScreen() {
 
     const payload: CreateSightingPayload = {
       description: description,
-      user_id: userId,
       post_id: postId,
     }
 
     try {
       const response = await fetch(`${URL}/sightings/create-sighting`, {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
+        headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
         body: JSON.stringify(payload)
       })
         

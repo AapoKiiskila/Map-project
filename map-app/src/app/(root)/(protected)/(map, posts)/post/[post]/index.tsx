@@ -113,7 +113,7 @@ export default function PostScreen() {
     setIsLoading(true)
 
     try {
-      const response = await fetch(`${URL}/users/${user?.id}/posts/${postId}`, {
+      const response = await fetch(`${URL}/posts/${postId}`, {
         method: "DELETE",
         headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
       })

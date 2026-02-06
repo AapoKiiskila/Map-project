@@ -7,11 +7,12 @@ import Ionicons from "@expo/vector-icons/Ionicons"
 import { LoadingModal } from "../../../../../../components/LoadingModal"
 import { LocalDateAndTime } from "../../../../../../components/LocalDateAndTime"
 import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native"
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { SuccessResponse } from "../../../../../../types/SuccessResponse"
 import { UpdateIsRead } from "../../../../../../types/UpdateIsRead"
 import { useNavigation } from "@react-navigation/native"
 import { useLocalSearchParams, useRouter } from "expo-router"
+import { UserContext } from "../../../../../../context/UserContext"
 
 export default function SightingScreen() {
   const {sighting, description, type, postId, sightingUserId, time, isRead, username} = useLocalSearchParams<{sighting: string, description: string, type: string, postId: string, sightingUserId: string, time: string, isRead: string, username: string}>()
@@ -22,9 +23,9 @@ export default function SightingScreen() {
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
   const router = useRouter()
+  const {token, user} = useContext(UserContext)
 
   const URL = config.URL
-  const userId: number = 2 // Hardcoded for testing purposes
 
   const [alertMessage, setAlertMessage] = useState<string>("")
   const [errorMessage, setErrorMessage] = useState<string>("")
@@ -34,10 +35,10 @@ export default function SightingScreen() {
 
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: userId === userIdNumber ? "Your sighting" : username,
+      headerTitle: user?.id === userIdNumber ? "Your sighting" : username,
 
       headerRight: 
-        userId === userIdNumber ?
+        user?.id === userIdNumber ?
           () => (
             <Pressable 
               onPress={() => setShowConfirmAlert(true)} 
@@ -52,21 +53,18 @@ export default function SightingScreen() {
         : null
     })
 
-    if ((isReadByUser === 0) && (userId !== userIdNumber)) {
+    if ((isReadByUser === 0) && (user?.id !== userIdNumber)) {
       markAsRead()
     }
   }, [navigation])
 
   const markAsRead = async (): Promise<void> => {
-    const payload: UpdateIsRead = {
-      is_read: 1,
-      user_id: userId
-    }
+    const payload: UpdateIsRead = {is_read: 1}
 
     try {
       await fetch(`${URL}/sightings/${sightingId}`, {
         method: "PUT",
-        headers: {"Content-Type": "application/json"},
+        headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
         body: JSON.stringify(payload)
       })
     } catch (error) {
@@ -80,9 +78,9 @@ export default function SightingScreen() {
     setIsLoading(true)
 
     try {
-      const response = await fetch(`${URL}/users/${userId}/sightings/${sightingId}`, {
+      const response = await fetch(`${URL}/sightings/${sightingId}`, {
         method: "DELETE",
-        headers: {"Content-Type": "application/json"},
+        headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
       })
         
       if (response.ok) {
