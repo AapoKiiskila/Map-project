@@ -5,19 +5,20 @@ import { CustomTextInput } from "../../../../../components/CustomTextInput"
 import isEmail from "validator/lib/isEmail"
 import { Keyboard, KeyboardAvoidingView, Platform, Pressable, StyleSheet, View } from "react-native"
 import { LoadingModal } from "../../../../../components/LoadingModal"
-import React, { useState, useEffect } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { SuccessfulEmailChange } from "../../../../../types/SuccessfulEmailChange"
 import { TextInputInfoText } from "../../../../../components/TextInputInfoText"
 import { UpdateEmailPayload } from "../../../../../types/UpdateEmailPayload"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { UserContext } from "../../../../../context/UserContext"
 import { useRouter } from "expo-router"
 
 export default function ChangeEmailScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
+  const {setUser, token, user} = useContext(UserContext)
 
   const URL = config.URL
-  const userId: number = 1  // Hardcoded for testing purposes
 
   const [newEmail, setNewEmail] = useState<string>("")
   const [newEmailError, setNewEmailError] = useState<boolean>(false)
@@ -42,26 +43,25 @@ export default function ChangeEmailScreen() {
     }
   }, [])
 
-  const checkNewEmail = (): void => {
-    if (!isEmail(newEmail)) {
-      setNewEmailError(true)
-    } else {
-      setNewEmailError(false)
-    }
-  }
-
   const changeNewEmail = (text: string): void => {
-    if (!isEmail(newEmail)) {
-      setNewEmailError(true)
-    } else {
-      setNewEmailError(false)
-    }
-    
+    setNewEmailError(false)
     setNewEmail(text)
   }
 
   const changeEmail = async (): Promise<void> => {
+    let credentialsError: boolean = false
     setIsSubmitted(true)
+
+    if (!isEmail(newEmail) || newEmail === user.email) {
+      credentialsError = true
+      setNewEmailError(true)
+    }
+
+    if (credentialsError) {
+      setIsSubmitted(false)
+      return
+    }
+
     setIsLoading(true)
 
     const payload: UpdateEmailPayload = {
@@ -69,15 +69,16 @@ export default function ChangeEmailScreen() {
     }
     
     try {
-      const response = await fetch(`${URL}/users/${userId}/update-email`, {
+      const response = await fetch(`${URL}/users/update-email`, {
         method: "PUT",
-        headers: {"Content-Type": "application/json"},
+        headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
         body: JSON.stringify(payload)
       })
     
       if (response.ok) {
         const data: SuccessfulEmailChange = await response.json()
         setAlertMessage(data.message)
+        setUser({...user, email: data.email})
       } else {
         const errorData: ErrorResponse = await response.json()
         setErrorMessage(errorData.detail)
@@ -106,7 +107,6 @@ export default function ChangeEmailScreen() {
             placeholder="Enter a new email address"
             value={newEmail} 
             onChangeText={changeNewEmail}
-            onBlur={checkNewEmail}
             textType="email"
           />
           <TextInputInfoText 
