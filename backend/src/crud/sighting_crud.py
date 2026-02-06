@@ -137,8 +137,8 @@ def get_received_sightings(user_id: int, db: sqlalchemy.orm.Session):
       src.models.Sighting.is_read,
       src.models.User.username,
     )
-    .join(src.models.Post, src.models.User.id == src.models.Post.user_id)
-    .join(src.models.Sighting, src.models.Post.id == src.models.Sighting.post_id)
+    .join(src.models.Post, src.models.Post.id == src.models.Sighting.post_id)
+    .join(src.models.User, src.models.User.id == src.models.Sighting.user_id)
     .filter(src.models.Post.user_id == user_id)
     .order_by(src.models.Sighting.time_created.desc())
     .all()
