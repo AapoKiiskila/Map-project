@@ -1,0 +1,137 @@
+import { config } from "../../../../config"
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native"
+import { ErrorResponse } from "../../../../types/ErrorResponse"
+import { Ionicons } from "@expo/vector-icons"
+import { LoadingModal } from "../../../../components/LoadingModal"
+import { LocalDateAndTime } from "../../../../components/LocalDateAndTime"
+import { MyPost } from "../../../../types/MyPost"
+import React, { useCallback, useContext, useState} from "react"
+import { useFocusEffect } from "@react-navigation/native"
+import { UserContext } from "../../../../context/UserContext"
+import { useRouter } from "expo-router"
+
+export default function PostsScreen() {
+  const router = useRouter()
+  const {token} = useContext(UserContext)
+
+  const URL = config.URL
+
+  const [posts, setPosts] = useState<MyPost[] | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string>("")
+  const [isPressed, setIsPressed] = useState<boolean>(false)
+  
+  useFocusEffect(
+    useCallback(() => {
+      fetchMyPosts()
+      setIsPressed(false)
+    }, [])
+  )
+
+  const fetchMyPosts = async (): Promise<void> => {
+    try {
+      const response = await fetch(`${URL}/posts/my-posts`, {
+        method: "GET",
+        headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`},
+      })
+        
+      if (response.ok) {
+        const data: MyPost[] = await response.json()
+        setPosts(data)
+      } else {
+        const errorData: ErrorResponse = await response.json()
+        setErrorMessage(errorData.detail)
+      }
+    }
+    catch (error) {
+      setErrorMessage("Something went wrong. Please try again later.")
+    }
+  }
+
+  const navigate = (id: number, type: string): void => {
+    setIsPressed(true)
+
+    router.push({
+      pathname: `/post/${id}`,
+      params: {type: type}
+    })
+  }
+  
+  return(
+    <View style={styles.mainContainer}>
+      <FlatList
+        contentContainerStyle={styles.container}
+        data={posts}
+        keyExtractor={item => String(item.id)}
+        renderItem={({item}) => (
+          <Pressable
+            disabled={isPressed}
+            key={item.id}
+            onPress={() => navigate(item.id, item.type)}
+            style={({pressed}) => [
+              styles.postContainer,
+              pressed && styles.pressablePressed,
+            ]}
+          >
+            <View style={styles.textContainer}>
+              <Text style={styles.postTitle}>{item.title}</Text>
+              <LocalDateAndTime time={item.time_created} />
+            </View>
+            <Ionicons 
+              name="chevron-forward" 
+              size={20} 
+              color="rgba(0, 0, 0, 1)" 
+            />
+          </Pressable>
+        )}
+      />
+
+      {errorMessage &&
+        <LoadingModal 
+          errorMessage={errorMessage} 
+          isLoading={false} 
+          isVisible={true}
+          onPress={() => setErrorMessage("")}
+        />
+      }
+    </View>
+  )
+}
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    backgroundColor: "rgba(255, 255, 255, 1)",
+    flex: 1,
+  },
+  container: {
+    alignItems: "center",
+    gap: 10,
+    paddingVertical: 10,
+  },
+  postContainer: {
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 1)",
+    elevation: 3,
+    flexDirection: "row",
+    height: 60,
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
+    shadowColor: "rgba(0, 0, 0, 1)(255, 255, 255, 1)",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    width: "95%",
+  },
+  pressablePressed: {
+    opacity: 0.2,
+  },
+  textContainer: {
+    gap: 5,
+  },
+  postTitle: {
+    fontSize: 16,
+    fontWeight: 500,
+  },
+  timeText: {
+    fontSize: 12,
+  },
+})
