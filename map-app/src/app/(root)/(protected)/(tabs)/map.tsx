@@ -139,7 +139,7 @@ export default function MapScreen() {
             onPress={() => navigateToPost(marker.id, marker.type)}
             pinColor={
               marker.user_id === user.id ? "rgba(255, 0, 0, 1)"
-              : marker.type === "Animal" ? "rgba(255, 196, 0, 1)"
+              : marker.type === "pet" ? "rgba(255, 196, 0, 1)"
               : "rgba(0, 60, 255, 1)"
             }
           />
