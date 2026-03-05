@@ -28,8 +28,8 @@ def fetch_one_post(post_id: int, user_id: int = fastapi.Depends(src.utils.get_cu
   return src.crud.post_crud.get_one_post(post_id, db)
 
 @router.delete("/{post_id}", status_code=fastapi.status.HTTP_200_OK)
-def delete_one_post(post_id: int, user_id: int = fastapi.Depends(src.utils.get_current_user), db: sqlalchemy.orm.Session = fastapi.Depends(src.database.get_db)):
-  return src.crud.post_crud.delete_post(post_id, user_id, db)
+async def delete_one_post(post_id: int, user_id: int = fastapi.Depends(src.utils.get_current_user), db: sqlalchemy.orm.Session = fastapi.Depends(src.database.get_db)):
+  return await src.crud.post_crud.delete_post(post_id, user_id, db)
 
 @router.put("/{post_id}", status_code=fastapi.status.HTTP_200_OK)
 def update_one_post(post_id: int, update_data: src.schemas.post_schema.PostUpdate, user_id: int = fastapi.Depends(src.utils.get_current_user), db: sqlalchemy.orm.Session = fastapi.Depends(src.database.get_db)):

@@ -44,9 +44,11 @@ export default function SightingsScreen() {
     })
   }, [navigation, showReceived])
 
-  useEffect(() => {
-    fetchReceivedSightings()
-  }, [count])
+  useFocusEffect(
+    useCallback(() => {
+      fetchReceivedSightings()
+    }, [count])
+  )
 
   useFocusEffect(
     useCallback(() => {
