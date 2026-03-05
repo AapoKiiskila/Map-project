@@ -2,6 +2,7 @@ import decimal
 import fastapi
 import src.models
 import src.schemas.post_schema
+import src.websocket_connection_manager
 import sqlalchemy.orm
 
 def get_all_posts(id: int | None, latitude: decimal.Decimal | None, longitude: decimal.Decimal | None, db: sqlalchemy.orm.Session):
@@ -69,7 +70,7 @@ def create_post(new_post: src.schemas.post_schema.PostCreate, user_id: int, db: 
 
   return {"message": "Post created successfully"}
 
-def delete_post(post_id: int, user_id: int, db: sqlalchemy.orm.Session):
+async def delete_post(post_id: int, user_id: int, db: sqlalchemy.orm.Session):
   user = db.query(src.models.User).filter(src.models.User.id == user_id).first()
 
   if not user:
@@ -82,6 +83,15 @@ def delete_post(post_id: int, user_id: int, db: sqlalchemy.orm.Session):
   
   db.delete(post)
   db.commit()
+
+  count = (
+    db.query(sqlalchemy.func.count(src.models.Sighting.id))
+    .join(src.models.Post, src.models.Post.id == src.models.Sighting.post_id)
+    .filter(src.models.Post.user_id == user_id, src.models.Sighting.is_read == False)
+    .scalar()
+  )
+
+  await src.websocket_connection_manager.manager.send_unread_sightings_count(user_id, count)
 
   return {"message": "The post has been permanently deleted"}
 
