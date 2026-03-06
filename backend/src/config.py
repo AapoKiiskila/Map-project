@@ -9,6 +9,7 @@ class Settings(pydantic_settings.BaseSettings):
   ACCESS_TOKEN_EXPIRE_MINUTES: int
   DATABASE_URL: str
   SECRET_KEY: str
+  TEST_DATABASE_URL: str
 
   model_config = pydantic_settings.SettingsConfigDict(env_file=env_path)
 
