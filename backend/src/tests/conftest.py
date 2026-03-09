@@ -29,6 +29,14 @@ def setup_database():
   yield
   src.database.Base.metadata.drop_all(bind=test_engine)
 
-@pytest.fixture(scope="function")
+@pytest.fixture()
 def client():
   return fastapi.testclient.TestClient(src.main.app)
+
+@pytest.fixture()
+def db():
+  db = TestingSessionLocal()
+  try:
+    yield db
+  finally:
+    db.close()
