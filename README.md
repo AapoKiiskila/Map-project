@@ -26,7 +26,7 @@ Run this in the `backend` directory:
 ### 4. Install dependencies
 Install backend dependencies by running this in the `backend` directory:
 ```
-.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
 ```
 Open a new terminal in the `map-app` directory and run:
 ```
