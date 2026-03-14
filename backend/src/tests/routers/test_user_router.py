@@ -2,7 +2,7 @@ import src.models
 
 def test_create_new_user(client):
   response = client.post(
-    "/users",
+    url="/users",
     json={
       "username": "TestUser",
       "email": "test.user@gmail.com",
@@ -23,7 +23,7 @@ def test_get_user_info(client, db):
   db.add(user)
   db.commit()
 
-  response = client.get("/users")
+  response = client.get(url="/users")
 
   assert response.status_code == 200
   assert response.json() == {
@@ -42,7 +42,7 @@ def test_change_new_username(client, db):
   db.add(user)
   db.commit()
 
-  response = client.put("/users/update-username", json={"username": "UpdatedUser"})
+  response = client.put(url="/users/update-username", json={"username": "UpdatedUser"})
 
   assert response.status_code == 200
   assert response.json() == {"message": "Username has been changed", "username": "UpdatedUser"}
@@ -57,7 +57,7 @@ def test_change_new_email(client, db):
   db.add(user)
   db.commit()
 
-  response = client.put("/users/update-email", json={"email": "user.test@gmail.com"})
+  response = client.put(url="/users/update-email", json={"email": "user.test@gmail.com"})
 
   assert response.status_code == 200
   assert response.json() == {"message": "Email address has been changed", "email": "user.test@gmail.com"}
@@ -72,7 +72,7 @@ def test_change_new_password(client, db):
   db.add(user)
   db.commit()
 
-  response = client.put("/users/update-password", json={"password": "Secret456"})
+  response = client.put(url="/users/update-password", json={"password": "Secret456"})
 
   assert response.status_code == 200
   assert response.json() == {"message": "Password has been changed"}
