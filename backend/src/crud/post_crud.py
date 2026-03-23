@@ -30,7 +30,10 @@ def get_all_posts(id: int | None, latitude: decimal.Decimal | None, longitude: d
   
   return posts
 
-def get_one_post(post_id: int, db: sqlalchemy.orm.Session):
+def get_one_post(post_id: int, user_id: int, db: sqlalchemy.orm.Session):
+  if not user_id or user_id < 1:
+    raise fastapi.HTTPException(status_code=fastapi.status.HTTP_400_BAD_REQUEST, detail="Bad request")
+  
   post = db.query(src.models.Post).filter(src.models.Post.id == post_id).first()
 
   if not post:
