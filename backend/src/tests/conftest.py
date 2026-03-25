@@ -5,8 +5,10 @@ import src.database
 import src.main
 import src.models
 import src.utils
+import src.websocket_connection_manager
 import sqlalchemy
 import sqlalchemy.orm
+import unittest.mock
 
 test_engine = sqlalchemy.create_engine(src.config.settings.TEST_DATABASE_URL)
 TestingSessionLocal = sqlalchemy.orm.sessionmaker(autocommit=False, autoflush=False, bind=test_engine)
@@ -33,6 +35,14 @@ def setup_database():
 @pytest.fixture()
 def client():
   return fastapi.testclient.TestClient(src.main.app)
+
+@pytest.fixture()
+def mock_send_unread_sightings_count(monkeypatch):
+  mock = unittest.mock.AsyncMock()
+
+  monkeypatch.setattr(src.websocket_connection_manager.manager, "send_unread_sightings_count", mock)
+
+  return mock
 
 @pytest.fixture()
 def insert_database_data():

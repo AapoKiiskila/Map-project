@@ -51,4 +51,20 @@ def test_create_new_post(client, insert_database_data):
 
   assert response.status_code == 201
   assert response.json() == {"message": "Post created successfully"}
-  
+
+def test_fetch_one_post(client, insert_database_data):
+  response = client.get("/posts/1")
+
+  assert response.status_code == 200
+  assert response.json()["title"] == "Post 1"
+  assert response.json()["details"] == "Details for post 1"
+  assert "time_created" in response.json()
+  assert "time_updated" in response.json()
+  assert response.json()["user_id"] == 1
+
+def test_delete_one_post(client, insert_database_data, mock_send_unread_sightings_count):
+  response = client.delete("/posts/1")
+
+  assert response.status_code == 200
+  assert response.json() == {"message": "The post has been permanently deleted"}
+  mock_send_unread_sightings_count.assert_awaited_once()
