@@ -5,10 +5,8 @@ import src.database
 import src.main
 import src.models
 import src.utils
-import src.websocket_connection_manager
 import sqlalchemy
 import sqlalchemy.orm
-import unittest.mock
 
 test_engine = sqlalchemy.create_engine(src.config.settings.TEST_DATABASE_URL)
 TestingSessionLocal = sqlalchemy.orm.sessionmaker(autocommit=False, autoflush=False, bind=test_engine)
@@ -35,14 +33,6 @@ def setup_database():
 @pytest.fixture()
 def client():
   return fastapi.testclient.TestClient(src.main.app)
-
-@pytest.fixture()
-def mock_send_unread_sightings_count(monkeypatch):
-  mock = unittest.mock.AsyncMock()
-
-  monkeypatch.setattr(src.websocket_connection_manager.manager, "send_unread_sightings_count", mock)
-
-  return mock
 
 @pytest.fixture()
 def insert_database_data():
@@ -106,6 +96,30 @@ def insert_database_data():
       user_id=2
     )
 
+    user_1_sighting_1 = src.models.Sighting(
+      description="Description for sighting 1",
+      user_id = 1,
+      post_id = 3
+    )
+
+    user_1_sighting_2 = src.models.Sighting(
+      description="Description for sighting 2",
+      user_id = 1,
+      post_id = 4
+    )
+
+    user_2_sighting_1 = src.models.Sighting(
+      description="Description for sighting 3",
+      user_id = 2,
+      post_id = 1
+    )
+
+    user_2_sighting_2 = src.models.Sighting(
+      description="Description for sighting 4",
+      user_id = 2,
+      post_id = 2
+    )
+
     db.add_all([
       user_1,
       user_2,
@@ -113,7 +127,11 @@ def insert_database_data():
       user_1_post_2,
       user_2_post_1,
       user_2_post_2,
-      user_2_post_3
+      user_2_post_3,
+      user_1_sighting_1,
+      user_1_sighting_2,
+      user_2_sighting_1,
+      user_2_sighting_2
     ])
 
     db.commit()

@@ -62,9 +62,12 @@ def test_fetch_one_post(client, insert_database_data):
   assert "time_updated" in response.json()
   assert response.json()["user_id"] == 1
 
-def test_delete_one_post(client, insert_database_data, mock_send_unread_sightings_count):
-  response = client.delete("/posts/1")
+def test_delete_one_post(client, insert_database_data):
+  with client.websocket_connect("/ws/1") as websocket:
+    response = client.delete("/posts/1")
 
-  assert response.status_code == 200
-  assert response.json() == {"message": "The post has been permanently deleted"}
-  mock_send_unread_sightings_count.assert_awaited_once()
+    data = websocket.receive_text()
+
+    assert response.status_code == 200
+    assert response.json() == {"message": "The post has been permanently deleted"}
+    assert data == "1"
