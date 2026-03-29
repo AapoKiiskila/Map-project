@@ -53,7 +53,7 @@ def test_create_new_post(client, insert_database_data):
   assert response.json() == {"message": "Post created successfully"}
 
 def test_fetch_one_post(client, insert_database_data):
-  response = client.get("/posts/1")
+  response = client.get(url="/posts/1")
 
   assert response.status_code == 200
   assert response.json()["title"] == "Post 1"
@@ -64,7 +64,7 @@ def test_fetch_one_post(client, insert_database_data):
 
 def test_delete_one_post(client, insert_database_data):
   with client.websocket_connect("/ws/1") as websocket:
-    response = client.delete("/posts/1")
+    response = client.delete(url="/posts/1")
 
     data = websocket.receive_text()
 
