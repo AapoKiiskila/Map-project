@@ -25,7 +25,7 @@ def create_new_post(new_post: src.schemas.post_schema.PostCreate, user_id: int =
 
 @router.get("/{post_id}", response_model=src.schemas.post_schema.PostFetchOnePost, status_code=fastapi.status.HTTP_200_OK)
 def fetch_one_post(post_id: int, user_id: int = fastapi.Depends(src.utils.get_current_user), db: sqlalchemy.orm.Session = fastapi.Depends(src.database.get_db)):
-  return src.crud.post_crud.get_one_post(post_id, db)
+  return src.crud.post_crud.get_one_post(post_id, user_id, db)
 
 @router.delete("/{post_id}", status_code=fastapi.status.HTTP_200_OK)
 async def delete_one_post(post_id: int, user_id: int = fastapi.Depends(src.utils.get_current_user), db: sqlalchemy.orm.Session = fastapi.Depends(src.database.get_db)):
